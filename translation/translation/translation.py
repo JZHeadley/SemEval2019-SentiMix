@@ -27,6 +27,7 @@ def translate_text_hacky():
                 # print(tweet['tokens'])
                 # print(tweet['langid'])
                 # print(tweet)
+                no_more_trans=False
                 for i in range(0,len(tweet['tokens'])):
                     if tweet['langid'][i] == 'lang2':
                         try:
@@ -34,13 +35,16 @@ def translate_text_hacky():
                             new_tweet['langid'].append('lang1')    
                         except Exception:
                             print("couldn't translate moving on...")
+                            no_more_trans=True
+                            break
                             new_tweet['tokens'].append(tweet['tokens'][i])
                             new_tweet['langid'].append(tweet['langid'][i])    
                     else:
                         new_tweet['tokens'].append(tweet['tokens'][i])
                         new_tweet['langid'].append(tweet['langid'][i])
                 new_tweet['sentiment']=tweet['sentiment']
-
+                if no_more_trans:
+                    break
                 # print(tweet)
                 # print(new_tweet)
                 time.sleep(2)
