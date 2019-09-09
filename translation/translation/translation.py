@@ -4,6 +4,11 @@ from googletrans import Translator
 import json
 import time
 
+import spacy
+import en_core_web_md
+import es_core_news_md
+import xx_ent_wiki_sm
+
 def translate_from_spanish(string_to_translate, translator):
     # return translator.translate(string_to_translate, source_language='es')
     return translator.translate(string_to_translate, src='es',dest='en')
@@ -78,6 +83,31 @@ def translate_google():
         with open('translatedTweets.json', 'w') as fp:
             json.dump(output, fp)
 
+def spacy_pos_tagging():
+    spacy.prefer_gpu()
+    nlpEn = en_core_web_md.load()
+    # nlpEs = es_core_news_md.load()
+    # nlpXX=xx_ent_wiki_sm.load()
+    with open('spanglish_trial_release.json') as json_file:
+        data = json.load(json_file)
+        output = []
+        for tweet in data[:2]:
+            print(tweet['tweetid'])
+            new_tweet = {}
+            new_tweet['tweetid']=tweet['tweetid']
+            new_tweet['tweet'] = tweet['tweet']
+            new_tweet['tokens']=tweet['tokens']
+            new_tweet['langid']=tweet['langid']
+            new_tweet['pos']=[]
+            new_tweet['sentiment']=tweet['sentiment']
+            # print(tweet)
+            doc=nlpEn(tweet['tweet'])
+            print([(w.text, w.pos_) for w in doc])
 
+            for i in range(0,len(tweet['tokens'])):
+                pass
+        with open('posTweets.json', 'w') as fp:
+            json.dump(output, fp)
 if __name__ =='__main__':
     translate_text_hacky()
+    # spacy_pos_tagging()

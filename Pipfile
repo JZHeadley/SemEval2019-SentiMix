@@ -13,6 +13,7 @@ google-cloud = "*"
 gcloud = "*"
 google-cloud-container = "*"
 googletrans = "*"
+spacy = "*"
 
 [requires]
 python_version = "3.7"
