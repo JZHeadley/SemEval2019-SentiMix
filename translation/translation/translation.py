@@ -5,9 +5,9 @@ import json
 import time
 
 import spacy
-import en_core_web_md
-import es_core_news_md
-import xx_ent_wiki_sm
+#import en_core_web_md
+#import es_core_news_md
+#import xx_ent_wiki_sm
 
 def translate_from_spanish(string_to_translate, translator):
     # return translator.translate(string_to_translate, source_language='es')
@@ -82,7 +82,7 @@ def translate_google():
 
             # print(tweet)
             # print(new_tweet)
-            time.sleep(2)
+            time.sleep(5)
             output.append(new_tweet)
         with open('translatedTweets.json', 'w') as fp:
             json.dump(output, fp)
