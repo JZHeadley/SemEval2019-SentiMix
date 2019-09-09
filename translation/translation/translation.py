@@ -14,7 +14,8 @@ def translate_from_spanish(string_to_translate, translator):
     return translator.translate(string_to_translate, src='es',dest='en')
 def translate_text_hacky():
     translator = Translator()
-    with open('spanglish_trial_release.json') as json_file:
+    #with open('spanglish_trial_release.json') as json_file:
+    with open('translatedTweets.json') as json_file:
             data = json.load(json_file)
             output = []
             no_more_trans=False
@@ -47,8 +48,8 @@ def translate_text_hacky():
                 #     break
                 # print(tweet)
                 # print(new_tweet)
-                if not no_more_trans:
-                    time.sleep(2)
+                #if not no_more_trans:
+                #    time.sleep(2)
                 output.append(new_tweet)
             with open('translatedTweets.json', 'w') as fp:
                 json.dump(output, fp)
