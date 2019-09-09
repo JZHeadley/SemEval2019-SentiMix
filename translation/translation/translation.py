@@ -17,7 +17,8 @@ def translate_text_hacky():
     with open('spanglish_trial_release.json') as json_file:
             data = json.load(json_file)
             output = []
-            for tweet in data:#[data[59]]:
+            no_more_trans=False
+            for tweet in data:
                 print(tweet['tweetid'])
                 new_tweet = {}
                 new_tweet['tweetid']=tweet['tweetid']
@@ -27,27 +28,27 @@ def translate_text_hacky():
                 # print(tweet['tokens'])
                 # print(tweet['langid'])
                 # print(tweet)
-                no_more_trans=False
                 for i in range(0,len(tweet['tokens'])):
-                    if tweet['langid'][i] == 'lang2':
+                    if tweet['langid'][i] == 'lang2' and not no_more_trans:
                         try:
                             translation = translate_from_spanish(tweet['tokens'][i],translator).text
                             new_tweet['langid'].append('lang1')    
                         except Exception:
                             print("couldn't translate moving on...")
                             no_more_trans=True
-                            break
+                            # break
                             new_tweet['tokens'].append(tweet['tokens'][i])
                             new_tweet['langid'].append(tweet['langid'][i])    
                     else:
                         new_tweet['tokens'].append(tweet['tokens'][i])
                         new_tweet['langid'].append(tweet['langid'][i])
                 new_tweet['sentiment']=tweet['sentiment']
-                if no_more_trans:
-                    break
+                # if no_more_trans:
+                #     break
                 # print(tweet)
                 # print(new_tweet)
-                time.sleep(2)
+                if not no_more_trans:
+                    time.sleep(2)
                 output.append(new_tweet)
             with open('translatedTweets.json', 'w') as fp:
                 json.dump(output, fp)
