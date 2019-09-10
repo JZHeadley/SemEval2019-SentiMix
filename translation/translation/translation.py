@@ -17,9 +17,10 @@ def translate_from_spanish(string_to_translate, translator):
 def translate_text_hacky():
     translator = Translator()
     #with open('spanglish_trial_release.json') as json_file:
-    with open('translatedTweets.json') as json_file:
+    with open('tweets_train.json') as json_file:
             data = json.load(json_file)
             output = []
+            no_more_trans=False	
             for tweet in data:
                 print(tweet['tweetid'])
                 new_tweet = {}
@@ -28,12 +29,13 @@ def translate_text_hacky():
                 new_tweet['tokens']=[]
                 new_tweet['langid']=[]
                 for i in range(0,len(tweet['tokens'])):
-                    if tweet['langid'][i] == 'lang2':
+                    if tweet['langid'][i] == 'lang2' and not no_more_trans:
                         try:
                             translation = translate_from_spanish(tweet['tokens'][i],translator).text
                             new_tweet['langid'].append('lang1')    
                         except Exception:
                             print("couldn't translate moving on...")
+                            no_more_trans=True	
                             new_tweet['tokens'].append(tweet['tokens'][i])
                             new_tweet['langid'].append(tweet['langid'][i])    
                     else:
@@ -141,11 +143,12 @@ def parse_conll_to_json():
         instance={}
         instance['tokens']=[]
         instance['langid']=[]
+        instance['tweet']=""
         for line in fp.readlines():
             if re.search(r'^meta\b\t[0-9]',line):
                 meta = line.replace('\n','').split('\t')
                 # print(meta)
-                instance['tweetId'] = int(meta[1].strip())
+                instance['tweetid'] = int(meta[1].strip())
                 instance['sentiment'] = meta[2].strip()
             elif line == '\n':
                 count+=1
@@ -153,21 +156,23 @@ def parse_conll_to_json():
                 instance={}
                 instance['tokens']=[]
                 instance['langid']=[]
-            
+                instance['tweet']=""
                 # print('found boundary')
             # print(line)
             else:
                 parts = line.replace('\n','').split('\t')
                 # print(parts)
+                instance['tweet'] = "%s %s" % (instance['tweet'], parts[0])
                 instance['tokens'].append(parts[0])
                 instance['langid'].append(parts[1])
         print(output)
         with open('tweets_train.json', 'w') as fp:
             json.dump(output, fp)
 if __name__ =='__main__':
-    with open('spanglish_trial_release.json') as json_file:
+    # with open('spanglish_trial_release.json') as json_file:
+    with open('tweets_train.json') as json_file:
         data = json.load(json_file)
-        # translate_text_hacky()
+        translate_text_hacky()
         # spacy_pos_tagging(data)
         # clean_tweets(data)
-    parse_conll_to_json()
+    # parse_conll_to_json()
