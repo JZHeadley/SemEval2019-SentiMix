@@ -14,6 +14,7 @@ gcloud = "*"
 google-cloud-container = "*"
 googletrans = "*"
 spacy = "*"
+pyconll = "*"
 
 [requires]
 python_version = "3.7"

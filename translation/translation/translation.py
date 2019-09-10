@@ -105,7 +105,7 @@ def clean_tweets(data):
     output=[]
     urlrx = re.compile(r'^https?:\/\/.*[\r\n]*')
     mentionrx = re.compile(r'^@[a-zA-Z0-9]+')
-    for tweet in data[:2]:
+    for tweet in data:
         print(tweet['tweetid'])
         new_tweet = {}
         new_tweet['tweetid']=tweet['tweetid']
@@ -130,9 +130,44 @@ def clean_tweets(data):
         print(new_tweet)
         with open('cleanTweets.json', 'w') as fp:
             json.dump(output, fp)
+
+
+
+
+def parse_conll_to_json():
+    with open('train_conll_spanglish.txt') as fp:
+        output =[]
+        count= 0
+        instance={}
+        instance['tokens']=[]
+        instance['langid']=[]
+        for line in fp.readlines():
+            if re.search(r'^meta\b\t[0-9]',line):
+                meta = line.replace('\n','').split('\t')
+                # print(meta)
+                instance['tweetId'] = int(meta[1].strip())
+                instance['sentiment'] = meta[2].strip()
+            elif line == '\n':
+                count+=1
+                output.append(instance)
+                instance={}
+                instance['tokens']=[]
+                instance['langid']=[]
+            
+                # print('found boundary')
+            # print(line)
+            else:
+                parts = line.replace('\n','').split('\t')
+                # print(parts)
+                instance['tokens'].append(parts[0])
+                instance['langid'].append(parts[1])
+        print(output)
+        with open('tweets_train.json', 'w') as fp:
+            json.dump(output, fp)
 if __name__ =='__main__':
     with open('spanglish_trial_release.json') as json_file:
         data = json.load(json_file)
         # translate_text_hacky()
         # spacy_pos_tagging(data)
-        clean_tweets(data)
+        # clean_tweets(data)
+    parse_conll_to_json()
