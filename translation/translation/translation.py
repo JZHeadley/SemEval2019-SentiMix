@@ -6,9 +6,46 @@ import time
 import re
 
 import spacy
-#import en_core_web_md
-#import es_core_news_md
+from spacy.lang.en import English
+from spacy.lang.es import Spanish
+import en_core_web_md
+import es_core_news_md
+
 #import xx_ent_wiki_sm
+
+
+def parse_conll_to_json():
+    with open('train_conll_spanglish.txt') as fp:
+        output =[]
+        count= 0
+        instance={}
+        instance['tokens']=[]
+        instance['langid']=[]
+        instance['tweet']=""
+        for line in fp.readlines():
+            if re.search(r'^meta\b\t[0-9]',line):
+                meta = line.replace('\n','').split('\t')
+                # print(meta)
+                instance['tweetid'] = int(meta[1].strip())
+                instance['sentiment'] = meta[2].strip()
+            elif line == '\n':
+                count+=1
+                output.append(instance)
+                instance={}
+                instance['tokens']=[]
+                instance['langid']=[]
+                instance['tweet']=""
+                # print('found boundary')
+            # print(line)
+            else:
+                parts = line.replace('\n','').split('\t')
+                # print(parts)
+                instance['tweet'] = "%s %s" % (instance['tweet'], parts[0])
+                instance['tokens'].append(parts[0])
+                instance['langid'].append(parts[1])
+        print(output)
+        with open('tweets_train.json', 'w') as fp:
+            json.dump(output, fp)
 
 def translate_from_spanish(string_to_translate, translator):
     # return translator.translate(string_to_translate, source_language='es')
@@ -17,7 +54,7 @@ def translate_from_spanish(string_to_translate, translator):
 def translate_text_hacky():
     translator = Translator()
     #with open('spanglish_trial_release.json') as json_file:
-    with open('tweets_train.json') as json_file:
+    with open('translatedTweets.json') as json_file:
             data = json.load(json_file)
             output = []
             no_more_trans=False	
@@ -82,7 +119,7 @@ def translate_google(data):
 def spacy_pos_tagging(data):
     spacy.prefer_gpu()
     nlpEn = en_core_web_md.load()
-    # nlpEs = es_core_news_md.load()
+    nlpEs = es_core_news_md.load()
     # nlpXX=xx_ent_wiki_sm.load()
     output = []
     for tweet in data[:2]:
@@ -107,6 +144,7 @@ def clean_tweets(data):
     output=[]
     urlrx = re.compile(r'^https?:\/\/.*[\r\n]*')
     mentionrx = re.compile(r'^@[a-zA-Z0-9]+')
+    print(len(data))
     for tweet in data:
         print(tweet['tweetid'])
         new_tweet = {}
@@ -128,51 +166,69 @@ def clean_tweets(data):
             else:
                 new_tweet['tokens'].append(tweet['tokens'][i])
                 new_tweet['langid'].append(tweet['langid'][i])
+        output.append(new_tweet)
+        # print(new_tweet)
+        print(len(output))
+        return output
+        # with open('cleanTweets.json', 'w') as fp:
+        #     json.dump(output, fp)
 
-        print(new_tweet)
-        with open('cleanTweets.json', 'w') as fp:
-            json.dump(output, fp)
 
 
 
-
-def parse_conll_to_json():
-    with open('train_conll_spanglish.txt') as fp:
-        output =[]
-        count= 0
-        instance={}
-        instance['tokens']=[]
-        instance['langid']=[]
-        instance['tweet']=""
-        for line in fp.readlines():
-            if re.search(r'^meta\b\t[0-9]',line):
-                meta = line.replace('\n','').split('\t')
-                # print(meta)
-                instance['tweetid'] = int(meta[1].strip())
-                instance['sentiment'] = meta[2].strip()
-            elif line == '\n':
-                count+=1
-                output.append(instance)
-                instance={}
-                instance['tokens']=[]
-                instance['langid']=[]
-                instance['tweet']=""
-                # print('found boundary')
-            # print(line)
+def stop_lematizing(data,nlpEn,nlpEs):
+    spacy_enstopwords = spacy.lang.en.stop_words.STOP_WORDS
+    spacy_esstopwords = spacy.lang.es.stop_words.STOP_WORDS
+    # print(spacy_enstopwords)
+    # print(spacy_esstopwords)
+    output=[]
+    for instance in data:
+        print(instance)
+        print(instance['tweetid'])
+        new_tweet = {}
+        new_tweet['tweetid']=instance['tweetid']
+        new_tweet['tweet'] = instance['tweet']
+        new_tweet['tokens']=[]
+        new_tweet['langid']=[]
+        new_tweet['sentiment']=instance['sentiment']  
+        for i,word in enumerate(instance['tokens']):
+            if instance['langid'][i] == 'lang1':
+                if word not in spacy_enstopwords:
+                #     continue
+                #     # print('got a stop word %s' % (word))
+                # else:
+                    new_tweet['tokens'].append(word)
+                    new_tweet['langid'].append(instance['langid'][i])
+            elif instance['langid'][i] == 'lang2':
+                if word not in spacy_esstopwords:
+                #     continue
+                #     # print('got a stop word %s' % (word))
+                # else:
+                    new_tweet['tokens'].append(word)
+                    new_tweet['langid'].append(instance['langid'][i])
             else:
-                parts = line.replace('\n','').split('\t')
-                # print(parts)
-                instance['tweet'] = "%s %s" % (instance['tweet'], parts[0])
-                instance['tokens'].append(parts[0])
-                instance['langid'].append(parts[1])
-        print(output)
-        with open('tweets_train.json', 'w') as fp:
-            json.dump(output, fp)
+                new_tweet['tokens'].append(word)
+                new_tweet['langid'].append(instance['langid'][i])       
+        output.append(new_tweet)
+        print(new_tweet)
+    return output
+
+
+
 if __name__ =='__main__':
     # with open('spanglish_trial_release.json') as json_file:
+    print("Loading Spacy")
+    # nlpEn = en_core_web_md.load()
+    # nlpEs = es_core_news_md.load()
+    print("Finished loading Spacy")
     with open('tweets_train.json') as json_file:
         data = json.load(json_file)
-        translate_text_hacky()
+        lematized = stop_lematizing(data,{},{})
+        cleaned = clean_tweets(lematized)
+        # translate_text_hacky()
         # spacy_pos_tagging(data)
-        # clean_tweets(data)
     # parse_conll_to_json()
+        with open('output_tweets.json', 'w') as fp:
+            json.dump(cleaned, fp)
+
+
