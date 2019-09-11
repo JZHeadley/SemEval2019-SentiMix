@@ -213,6 +213,44 @@ def remove_stop_words(data):
     bar.finish()
     return output
 
+from spacy.lemmatizer import Lemmatizer
+from spacy.lang.en import LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES
+def lemmatize(data):
+    output=[]
+
+    lemmatizerEn = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)    
+    lemmatizerEs = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES,lookup=spacy.lang.es.LOOKUP)    
+    
+    # lemmatizerEs = Lemmatizer(spacy.lang.es.LEMMA_INDEX, spacy.lang.es.LEMMA_EXC, spacy.lang.es.LEMMA_RULES)
+    bar = ChargingBar('Lemmatizing\t\t\t\t', max=len(data))
+    for instance in data[:2]:
+        print(instance)
+        new_tweet = {}
+        new_tweet['tweetid']=instance['tweetid']
+        new_tweet['tweet'] = instance['tweet']
+        new_tweet['tokens']=[]
+        new_tweet['langid']=instance['langid']
+        new_tweet['sentiment']=instance['sentiment']  
+        for i,word in enumerate(instance['tokens']):
+            if (instance['langid'][i] == 'lang1'):
+                new_tweet['tokens'].append(lemmatizerEn.lookup(word))
+            elif (instance['langid'][i] == 'lang2'):
+                new_tweet['tokens'].append(lemmatizerEs.lookup(word))
+            else:
+                new_tweet['tokens'].append(word)
+
+            # new_tweet['tokens'].append(lemmatizerEn.lookup(word))
+        output.append(new_tweet)
+        print(new_tweet)
+        new_tweet = {}
+        new_tweet['tweetid']=instance['tweetid']
+        new_tweet['tweet'] = instance['tweet']
+        new_tweet['tokens']=[]
+        new_tweet['langid']=[]
+        new_tweet['sentiment']=instance['sentiment']  
+        bar.next()
+    bar.finish()
+    return output
 
 
 if __name__ =='__main__':
@@ -225,10 +263,11 @@ if __name__ =='__main__':
         data = json.load(json_file)
         cleaned = clean_tweets(data)
         stopped = remove_stop_words(cleaned)
+        lemmatized = lemmatize(stopped)
         # translate_text_hacky()
         # spacy_pos_tagging(data)
     # parse_conll_to_json()
         with open('output_tweets.json', 'w') as fp:
-            json.dump(stopped, fp)
+            json.dump(lemmatized, fp)
 
 
