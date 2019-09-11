@@ -9,6 +9,6 @@ verify_ssl = true
 googletrans = "*"
 google-cloud-translate = "*"
 spacy = "*"
-
+progress = "*"
 [requires]
 python_version = "3.7"

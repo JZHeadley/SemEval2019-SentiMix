@@ -11,6 +11,8 @@ from spacy.lang.es import Spanish
 import en_core_web_md
 import es_core_news_md
 
+from progress.bar import ChargingBar
+
 #import xx_ent_wiki_sm
 
 
@@ -131,7 +133,6 @@ def spacy_pos_tagging(data):
         new_tweet['langid']=tweet['langid']
         new_tweet['pos']=[]
         new_tweet['sentiment']=tweet['sentiment']
-        # print(tweet)
         doc=nlpEn(tweet['tweet'])
         print([(w.text, w.pos_) for w in doc])
 
@@ -144,47 +145,45 @@ def clean_tweets(data):
     output=[]
     urlrx = re.compile(r'^https?:\/\/.*[\r\n]*')
     mentionrx = re.compile(r'^@[a-zA-Z0-9]+')
-    print(len(data))
+    bar = ChargingBar('Cleaning Tweets\t\t\t\t', max=len(data))
     for tweet in data:
-        print(tweet['tweetid'])
         new_tweet = {}
         new_tweet['tweetid']=tweet['tweetid']
         new_tweet['tweet'] = tweet['tweet']
         new_tweet['tokens']=[]
         new_tweet['langid']=[]
         new_tweet['sentiment']=tweet['sentiment']
-        print(tweet)
         for i in range(0,len(tweet['tokens'])):
             if tweet['langid'][i] == 'other':
-                if mentionrx.search(tweet['tokens'][i]):
-                    print('matched')
-                    continue
                 text = re.sub(r'^https?:\/\/.*[\r\n]*', '', tweet['tokens'][i], flags=re.MULTILINE)
-                if len(text) != 0:
+                if mentionrx.search(tweet['tokens'][i]):
+                    continue
+                elif len(text) != 0:
                     new_tweet['tokens'].append(tweet['tokens'][i])
                     new_tweet['langid'].append(tweet['langid'][i])
             else:
                 new_tweet['tokens'].append(tweet['tokens'][i])
                 new_tweet['langid'].append(tweet['langid'][i])
         output.append(new_tweet)
-        # print(new_tweet)
-        print(len(output))
-        return output
-        # with open('cleanTweets.json', 'w') as fp:
-        #     json.dump(output, fp)
+        new_tweet = {}
+        new_tweet['tweetid']=tweet['tweetid']
+        new_tweet['tweet'] = tweet['tweet']
+        new_tweet['tokens']=[]
+        new_tweet['langid']=[]
+        new_tweet['sentiment']=tweet['sentiment']
+        bar.next()
+    bar.finish()
+    return output
 
 
 
 
-def stop_lematizing(data,nlpEn,nlpEs):
+def remove_stop_words(data):
     spacy_enstopwords = spacy.lang.en.stop_words.STOP_WORDS
     spacy_esstopwords = spacy.lang.es.stop_words.STOP_WORDS
-    # print(spacy_enstopwords)
-    # print(spacy_esstopwords)
     output=[]
+    bar = ChargingBar('Removing Stop Words\t\t\t', max=len(data))
     for instance in data:
-        print(instance)
-        print(instance['tweetid'])
         new_tweet = {}
         new_tweet['tweetid']=instance['tweetid']
         new_tweet['tweet'] = instance['tweet']
@@ -194,41 +193,42 @@ def stop_lematizing(data,nlpEn,nlpEs):
         for i,word in enumerate(instance['tokens']):
             if instance['langid'][i] == 'lang1':
                 if word not in spacy_enstopwords:
-                #     continue
-                #     # print('got a stop word %s' % (word))
-                # else:
                     new_tweet['tokens'].append(word)
                     new_tweet['langid'].append(instance['langid'][i])
             elif instance['langid'][i] == 'lang2':
                 if word not in spacy_esstopwords:
-                #     continue
-                #     # print('got a stop word %s' % (word))
-                # else:
                     new_tweet['tokens'].append(word)
                     new_tweet['langid'].append(instance['langid'][i])
             else:
                 new_tweet['tokens'].append(word)
                 new_tweet['langid'].append(instance['langid'][i])       
         output.append(new_tweet)
-        print(new_tweet)
+        new_tweet = {}
+        new_tweet['tweetid']=instance['tweetid']
+        new_tweet['tweet'] = instance['tweet']
+        new_tweet['tokens']=[]
+        new_tweet['langid']=[]
+        new_tweet['sentiment']=instance['sentiment']  
+        bar.next()
+    bar.finish()
     return output
 
 
 
 if __name__ =='__main__':
     # with open('spanglish_trial_release.json') as json_file:
-    print("Loading Spacy")
+    # print("Loading Spacy")
     # nlpEn = en_core_web_md.load()
     # nlpEs = es_core_news_md.load()
-    print("Finished loading Spacy")
+    # print("Finished loading Spacy")
     with open('tweets_train.json') as json_file:
         data = json.load(json_file)
-        lematized = stop_lematizing(data,{},{})
-        cleaned = clean_tweets(lematized)
+        cleaned = clean_tweets(data)
+        stopped = remove_stop_words(cleaned)
         # translate_text_hacky()
         # spacy_pos_tagging(data)
     # parse_conll_to_json()
         with open('output_tweets.json', 'w') as fp:
-            json.dump(cleaned, fp)
+            json.dump(stopped, fp)
 
 
