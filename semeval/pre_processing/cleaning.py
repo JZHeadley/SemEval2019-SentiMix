@@ -108,3 +108,19 @@ def remove_stop_words(data):
         bar.next()
     bar.finish()
     return output
+
+def lowercase(data):
+    output=[]
+    bar = ChargingBar('Lowercasing tokens\t\t\t', max=len(data))
+    for instance in data:
+        new_tweet = {}
+        new_tweet['tweetid']=instance['tweetid']
+        new_tweet['tweet'] = instance['tweet']
+        new_tweet['tokens']= [x.lower() if instance['langid'][i] != 'other' else x for i, x in enumerate(instance['tokens']) ]
+        new_tweet['langid']=instance['langid']
+        new_tweet['sentiment']=instance['sentiment']  
+        output.append(new_tweet)
+        bar.next()
+        
+    bar.finish()
+    return output

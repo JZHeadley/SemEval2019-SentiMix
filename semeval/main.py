@@ -6,7 +6,8 @@ if __name__ =='__main__':
     with open('tweets_train.json') as json_file:
         data = json.load(json_file)
         cleaned = cleaning.clean_tweets(data)
-        stopped = cleaning.remove_stop_words(cleaned)
+        lowered = cleaning.lowercase(cleaned)
+        stopped = cleaning.remove_stop_words(lowered)
         lemmatized = cleaning.lemmatize(stopped)
         with open('output_tweets.json', 'w') as fp:
             json.dump(lemmatized, fp)
