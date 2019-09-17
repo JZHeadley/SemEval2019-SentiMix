@@ -11,7 +11,9 @@
 # the first argument is the txt file that contains the ambigious word training data. The second argument is the txt file that contains the test data. After these arguments, there should be "> [the txt file with the predications]" so that the results can be scored
 
 # py .\SentiMix.py .\spanglish_trial_release.txt
-# py .\SentiMix.py ..\..\..\..\Dropbox\NLP\SentiMix\spanglish_trial_release.txt
+# py .\SentiMix.py ..\..\spanglish_trial_release.json
+# py .\SentiMix.py ..\..\tweets_train.json
+
 
 # pip install pytorch-pretrained-bert
 
@@ -29,6 +31,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.metrics import classification_report
 
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_recall_fscore_support
 
 # BERT stuff
 import torch
@@ -37,12 +42,6 @@ from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM
 import matplotlib.pyplot as plt
 
 
-
-
-# {"tweetid": "1", "tweet": "With this LG G Watch you can be livin’ la vida of a secret agent … or at least look like it. http://t.co/FtlWydFEpC http://t.co/IVTb2dosL2",
-#  "tokens": ["With", "this", "LG", "G", "Watch", "you", "can", "be", "livin", "’", "la", "vida", "of", "a", "secret", "agent", "…", "or", "at", "least", "look", "like", "it", ".", "http://t.co/FtlWydFEpC", "http://t.co/IVTb2dosL2"], 
-#  "langid": ["lang1", "lang1", "ne", "ne", "lang1", "lang1", "lang1", "lang1", "lang1", "other", "lang2", "lang2", "lang1", "lang1", "lang1", "lang1", "other", "lang1", "lang1", "lang1", "lang1", "lang1", "lang1", "other", "other", "other"], 
-#  "sentiment": "positive"}
 def pytorchstuff(spanglishData):
    TEXT = data.Field(tokenize = None) # TODO chcek if tokenize None works
    LABEL = data.LabelField(dtype = torch.float)
@@ -53,47 +52,51 @@ def pytorchstuff(spanglishData):
 
 
 def parseData(dataFileName): #TODO will we be given a test set to as a final proect? like should both train and test be possible params?
-   dataFile = open(dataFileName, "r", encoding="utf8")
-
-   posSenti = []
-   negSenti = []
-   neutSenti = []
-
    # used for training
    X = []
    y = []
 
    spanglishData = []
 
-   for line in dataFile:
-      jsonLine = json.loads(line) # note really json, its a python dictionary
-      spanglishData.append(jsonLine)
-      X.append(jsonLine["tokens"]) #TODO this is a list. should it be joined?
-      # y.append(jsonLine["sentiment"])
+   with open(dataFileName, "r", encoding="utf8") as json_file:
+      
+      data = json.load(json_file)
+   
+      posSenti = []
+      negSenti = []
+      neutSenti = []
+
+      
+
+      for jsonLine in data:
+         # jsonLine = json.loads(line) # note really json, its a python dictionary
+         spanglishData.append(jsonLine)
+         X.append(jsonLine["tokens"]) #TODO this is a list. should it be joined?
+         # y.append(jsonLine["sentiment"])
 
 
-      if (jsonLine["sentiment"] == "positive"):
-         y.append(2)
-         posSenti.append(jsonLine)
-      elif (jsonLine["sentiment"] == "negative"):
-         negSenti.append(jsonLine)
-         y.append(1)
-      elif (jsonLine["sentiment"] == "neutral"):
-         neutSenti.append(jsonLine)
-         y.append(0)
+         if (jsonLine["sentiment"] == "positive"):
+            y.append(2)
+            posSenti.append(jsonLine)
+         elif (jsonLine["sentiment"] == "negative"):
+            negSenti.append(jsonLine)
+            y.append(1)
+         elif (jsonLine["sentiment"] == "neutral"):
+            neutSenti.append(jsonLine)
+            y.append(0)
 
-   # print(spanglishData)
+      # print(spanglishData)
 
-   #NOTE that the sentiment-organized-lists are not returned/used for anything. idk if they will be
-   print("number of all sentiments: ", len(spanglishData))
-   print("number of positive sentiments: ", len(posSenti))
-   print("number of negative sentiments: ", len(negSenti))
-   print("number of neutral sentiments: ", len(neutSenti))
+      #NOTE that the sentiment-organized-lists are not returned/used for anything. idk if they will be
+      print("number of all sentiments: ", len(spanglishData))
+      print("number of positive sentiments: ", len(posSenti))
+      print("number of negative sentiments: ", len(negSenti))
+      print("number of neutral sentiments: ", len(neutSenti))
 
-   # print("X : ", X[0])
-   # print("y : ", y[0])
+      # print("X : ", X[0])
+      # print("y : ", y[0])
 
-   return spanglishData, X, y
+   return spanglishData, X, y, len(posSenti), len(negSenti), len(neutSenti)
 
 
 # TODO pass in the cleaned data I suppose. maybe probaly clean based on given tokens and then combine the tokens here?
@@ -111,6 +114,7 @@ def prepareForBert(data):
    firstRun = True
 
    bertPreparedTweets = []
+   bertSentenceReprenstations = []
    for line in data:
       text = " ".join(line["tokens"])
       marked_text = "[CLS] " + text + " [SEP]" # TODO This is assuming a whole tweet is a single sentence rn. fix dis shiz homz
@@ -159,9 +163,11 @@ def prepareForBert(data):
             # at a guess, sentence reps will be faster to do, but words would be more accurate. but im not sure about that 
 
          sentence_embedding = torch.mean(encoded_layers[11], 1)
+
+         bertSentenceReprenstations.append(sentence_embedding[0])
          
          if (firstRun):
-            print ("Our final sentence embedding vector of shape:"), sentence_embedding[0].shape[0]
+            print ("Our final sentence embedding vector of shape: ", sentence_embedding[0].shape[0])
 
       # only print the first iteration of the loop as a sanity check
       if (firstRun):
@@ -203,6 +209,21 @@ def prepareForBert(data):
 
    return bertPreparedTweets
 
+# class BertForSequenceClassification(nn.Module):
+  
+#     def __init__(self, num_labels=2):
+#         super(BertForSequenceClassification, self).__init__()
+#         self.num_labels = num_labels
+#         self.bert = BertModel.from_pretrained('bert-base-uncased')
+#         self.dropout = nn.Dropout(config.hidden_dropout_prob)
+#         self.classifier = nn.Linear(config.hidden_size, num_labels)
+#         nn.init.xavier_normal_(self.classifier.weight)
+#     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None):
+#         _, pooled_output = self.bert(input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
+#         pooled_output = self.dropout(pooled_output)
+#         logits = self.classifier(pooled_output)
+
+#         return logits
 
 def getUniqueTokens(data):
    uniqueTokens = {}
@@ -238,6 +259,39 @@ def splitData(X, y):
 
    return X_train, X_test, y_train, y_test
 
+
+# TODO should this be based off of the test set? what happens when X-fold happens? I think im gonna use the whole dataset for this.
+def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true):
+   
+   # create y_pred to be init with the most frequent sentiment seen in the data
+   sentiToPredict = -1
+   mostFrequentSenti = max(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
+   if (mostFrequentSenti == numOfPosSenti):
+      sentiToPredict = 2
+   elif (mostFrequentSenti == numOfPosSenti):
+      sentiToPredict = 1
+   elif (mostFrequentSenti == numOfPosSenti):
+      sentiToPredict = 0
+   y_pred = [sentiToPredict] * len(y_true)
+
+   scorer(y_true, y_pred)
+
+
+def scorer(y_true, y_pred):
+   accuracy = accuracy_score(y_true, y_pred)
+   error = 1.0 - accuracy
+   cm = confusion_matrix(y_true, y_pred)
+   averagePrecisonRecallFScore = precision_recall_fscore_support(y_true, y_pred, average='macro') #TODO what average to use?
+   perLabel = precision_recall_fscore_support(y_true, y_pred, average=None,
+      labels=[0,1,2])
+
+   print(cm)
+   print("accuracy: ", accuracy)
+   print("error: ", error)
+   print("averagePrecisonRecallFScore: ", averagePrecisonRecallFScore)
+   print("perLabel preciosn, recall, and fscore: ", perLabel)
+
+
 # main
 def main():
    # x = torch.rand(5, 3)
@@ -253,11 +307,13 @@ def main():
    dataFileName = args.dataFileName
    # testFileName = args.testFileName
 
-   spanglishData, X, y = parseData(dataFileName)
+   spanglishData, X, y, numOfPosSenti, numOfNegSenti, numOfNeutSenti = parseData(dataFileName)
+
+   # getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y) # see results at the bottom of this. TODO add to the top in the summary.
 
    getUniqueTokens(spanglishData)
 
-   bertPreparedTweets = prepareForBert(spanglishData)
+   # bertPreparedTweets = prepareForBert(spanglishData)
 
    # tfidf(spanglishData[:2])
    X_train, X_test, y_train, y_test = splitData(X, y)
@@ -290,6 +346,14 @@ def main():
 if __name__ == '__main__':
    main()
 
+
+# baseline results: 
+# where class 2 is pos, class 1 is neutral, and class 0 is negative
+# [[   0    0 4968]
+#  [   0    0 2529]
+#  [   0    0 7503]]
+# accuracy:  0.5002
+# error:  0.4998
 
 # from a failed sklearn attempt. worst case ill go back to this if bert is also a failure
 # def tfidf(text):
