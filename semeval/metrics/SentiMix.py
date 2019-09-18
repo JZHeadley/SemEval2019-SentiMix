@@ -18,6 +18,32 @@
 
 # pip install pytorch-pretrained-bert
 
+# task name was SST-2, I made it MRPC, or QQP, they both have fscore
+# NOTE " Note that you can also change details in the run_classifier_dataset_utils.py." - maybe use SST-2 but add in fscore yourself. https://ireneli.eu/2019/07/05/deep-learning-17-text-classification-with-bert-using-pytorch/
+# bert base uncased is where the multilingual comes from, i think
+# TODO is max_seq_length the character limit of twitter? is that what seq refers to?
+# TODO if this works, do repeated runs with different train_batch_size, learning_rate, and num_train_epochs
+
+# OG instruction: 
+# python run_classifier.py \
+# --task_name SST-2 \
+# --do_train \
+# --do_eval \
+# --do_lower_case \
+# --data_dir YOUR_DATA_DIR \
+# --bert_model bert-base-uncased \
+# --max_seq_length 128 \
+# --train_batch_size 32 \
+# --learning_rate 2e-5 \
+# --num_train_epochs 3.0 \
+# --output_dir YOUR_OUTPUT_DIR
+
+# modified instructions:
+# py run_classifier.py --task_name SST-2 --do_train --do_eval --do_lower_case --data_dir ../../semeval/metrics --bert_model bert-base-uncased --max_seq_length 128 --train_batch_size 32 --learning_rate 2e-5 --num_train_epochs 3.0 --output_dir ./results
+
+# TODO is this a script?
+# py run_classifier.py \ --task_name SST-2 \ --do_train \ --do_eval \ --do_lower_case \ --data_dir ../../semeval/metrics \ --bert_model bert-base-uncased \ --max_seq_length 128 \ --train_batch_size 32 \ --learning_rate 2e-5 \ --num_train_epochs 3.0 \ --output_dir ./results
+
 from __future__ import print_function
 # import torch
 import numpy as np
@@ -249,7 +275,7 @@ def cleanData(spanglishData): #TODO pass in tokens
 
 
 def splitData(X, y):
-   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state = 42)  #TODO what was the split %? #NOTE random_State is a seed. used for debugging
+   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)  #, random_state = 42)  #TODO what was the split %? #NOTE random_State is a seed. used for debugging
    
    # print("X train: ", X_train[0])
    # print("X test: ", X_test[0])
@@ -268,14 +294,30 @@ def createTSVFiles(spanglishData):
    with open('tsv_tweets.tsv', 'w', encoding="utf8") as fp:
       fp.write("sentence\tlabel")
 
-      # json.dump(lemmatized, fp)
       for jsonLine in spanglishData:
-         # print(jsonLine["tweet"] + "\t" + jsonLine["sentiment"])
          fp.write(jsonLine["tweet"] + "\t" + jsonLine["sentiment"])
 
    # with open('tsv_tweets.tsv', 'r', encoding="utf8") as tsv_file:
    #    for line in tsv_file:
    #       print(line)
+
+
+def createSplitTSVFiles(X_train, X_test, y_train, y_test):
+   if ((len(X_train) != len(y_train)) or (len(X_test) != len(y_test))):
+      print("something went wrong when splitting the data")
+      return
+
+   with open('train.tsv', 'w', encoding="utf8") as fp:
+      fp.write("sentence\tlabel")
+
+      for i,line in enumerate(X_train):
+         fp.write(" ".join(line) + "\t" + str(y_train[i]))
+
+   with open('dev.tsv', 'w', encoding="utf8") as fp:
+      fp.write("sentence\tlabel")
+
+      for i,line in enumerate(X_test):
+         fp.write(" ".join(line) + "\t" + str(y_test[i]))
 
 
 # TODO should this be based off of the test set? what happens when X-fold happens? I think im gonna use the whole dataset for this.
@@ -331,12 +373,15 @@ def main():
 
    getUniqueTokens(spanglishData)
 
-   createTSVFiles(spanglishData)
+   # createTSVFiles(spanglishData)
 
    # bertPreparedTweets = prepareForBert(spanglishData)
 
    # tfidf(spanglishData[:2])
    X_train, X_test, y_train, y_test = splitData(X, y)
+
+   createSplitTSVFiles(X_train, X_test, y_train, y_test)
+
    # naiveBayes(X_train, X_test, y_train, y_test)
    # pytorchstuff(spanglishData)
 
