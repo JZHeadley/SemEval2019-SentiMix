@@ -13,6 +13,7 @@
 # py .\SentiMix.py .\spanglish_trial_release.txt
 # py .\SentiMix.py ..\..\spanglish_trial_release.json
 # py .\SentiMix.py ..\..\tweets_train.json
+# py .\SentiMix.py ..\output_tweets.json
 
 
 # pip install pytorch-pretrained-bert
@@ -225,6 +226,9 @@ def prepareForBert(data):
 
 #         return logits
 
+#TODO I think everything needed for the classifer is in here: https://github.com/google-research/bert/blob/master/run_classifier.py
+#TODO maybe follow this : https://ireneli.eu/2019/07/05/deep-learning-17-text-classification-with-bert-using-pytorch/ and just split all the data after cleaning and then run these?
+
 def getUniqueTokens(data):
    uniqueTokens = {}
 
@@ -241,7 +245,7 @@ def getUniqueTokens(data):
 
 def cleanData(spanglishData): #TODO pass in tokens
    #TODO go all lower case, do stemming and leminzation, fix typos, removing stop words, replace all urls and hashtags with "URL" and "hashtag" (or remove them), etc
-   return
+   return spanglishData
 
 
 def splitData(X, y):
@@ -258,6 +262,20 @@ def splitData(X, y):
    print("number of y test: ", len(y_test))
 
    return X_train, X_test, y_train, y_test
+
+
+def createTSVFiles(spanglishData):
+   with open('tsv_tweets.tsv', 'w', encoding="utf8") as fp:
+      fp.write("sentence\tlabel")
+
+      # json.dump(lemmatized, fp)
+      for jsonLine in spanglishData:
+         # print(jsonLine["tweet"] + "\t" + jsonLine["sentiment"])
+         fp.write(jsonLine["tweet"] + "\t" + jsonLine["sentiment"])
+
+   # with open('tsv_tweets.tsv', 'r', encoding="utf8") as tsv_file:
+   #    for line in tsv_file:
+   #       print(line)
 
 
 # TODO should this be based off of the test set? what happens when X-fold happens? I think im gonna use the whole dataset for this.
@@ -312,6 +330,8 @@ def main():
    # getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y) # see results at the bottom of this. TODO add to the top in the summary.
 
    getUniqueTokens(spanglishData)
+
+   createTSVFiles(spanglishData)
 
    # bertPreparedTweets = prepareForBert(spanglishData)
 
