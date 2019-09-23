@@ -4,17 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+bandit = "*"
 
 [packages]
-hyper = "*"
-google-cloud-translate = "*"
-google = "*"
-google-cloud = "*"
-gcloud = "*"
-google-cloud-container = "*"
 googletrans = "*"
+google-cloud-translate = "*"
 spacy = "*"
-pyconll = "*"
+progress = "*"
+tensorflow = "*"
 
 [requires]
 python_version = "3.7"
