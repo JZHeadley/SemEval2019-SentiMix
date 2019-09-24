@@ -1,6 +1,7 @@
 import json
 from pre_processing import cleaning
 from metrics import metrics
+from processing import processing
 
 if __name__ =='__main__':
     # parse_conll_to_json('train_conll_spanglish.txt','tweets_train.json')
@@ -12,6 +13,7 @@ if __name__ =='__main__':
         lemmatized = cleaning.lemmatize(stopped)
         emoji_sentiments = metrics.calculate_emoji_sentiments(lemmatized)
         metrics.get_emoji_baseline(data,emoji_sentiments)
+        processing.get_word_embeddings(lemmatized)
         with open('output_tweets.json', 'w') as fp:
             json.dump(lemmatized, fp)
 

@@ -2,3 +2,4 @@
 codealike.json
 output_tweets.json
 *.pyc
+tmp/
