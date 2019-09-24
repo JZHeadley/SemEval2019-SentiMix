@@ -1,11 +1,14 @@
 import re
 import emoji
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_recall_fscore_support
 from progress.bar import ChargingBar
 
 # https://stackoverflow.com/a/43146653/5472958
 def extract_emojis(str):
   return ''.join(c for c in str if c in emoji.UNICODE_EMOJI)
+
 
 def calculate_emoji_sentiments(data, threshold=10):
     regex = re.compile(r'\d+(.*?)[\u263a-\U0001f645]')
@@ -32,6 +35,7 @@ def calculate_emoji_sentiments(data, threshold=10):
     bar.finish()
     return emoji_map
 
+
 def get_emoji_baseline(data,emoji_map):
     predictions =[]
     emoji_tweet_labels =[]
@@ -52,3 +56,90 @@ def get_emoji_baseline(data,emoji_map):
         # print(tweet['sentiment'],label)
     bar.finish()
     print('Accuracy of emoji map is:',accuracy_score(predictions,emoji_tweet_labels))
+
+
+# TODO should this be based off of the test set? what happens when X-fold happens? I think im gonna use the whole dataset for this.
+def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true):
+   
+   # create y_pred to be init with the most frequent sentiment seen in the data
+   sentiToPredict = -1
+   mostFrequentSenti = max(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
+   if (mostFrequentSenti == numOfPosSenti):
+      sentiToPredict = 2
+   elif (mostFrequentSenti == numOfPosSenti):
+      sentiToPredict = 1
+   elif (mostFrequentSenti == numOfPosSenti):
+      sentiToPredict = 0
+   y_pred = [sentiToPredict] * len(y_true)
+
+   scorer(y_true, y_pred)
+
+
+def scorer(y_true, y_pred):
+   accuracy = accuracy_score(y_true, y_pred)
+   error = 1.0 - accuracy
+   cm = confusion_matrix(y_true, y_pred)
+   averagePrecisonRecallFScore = precision_recall_fscore_support(y_true, y_pred, average='macro') #TODO what average to use?
+   perLabel = precision_recall_fscore_support(y_true, y_pred, average=None,
+      labels=[0,1,2])
+
+   print(cm)
+   print("accuracy: ", accuracy)
+   print("error: ", error)
+   print("averagePrecisonRecallFScore: ", averagePrecisonRecallFScore)
+   print("perLabel preciosn, recall, and fscore: ", perLabel)
+
+
+def getUniqueTokens(data):
+   uniqueTokens = {}
+
+   for line in data: # needs to be strings
+      for token in line['tokens']:
+         if token not in uniqueTokens: 
+            uniqueTokens[token] = 0
+         uniqueTokens[token] += 1
+
+   print("number of unique tokens: ", len(uniqueTokens))
+
+   return uniqueTokens
+
+
+def getDataBySentiment(data): 
+   posSenti = []
+   negSenti = []
+   neutSenti = []
+   spanglishData = []
+
+   for instance in data:
+      spanglishData.append(instance)
+
+      if (instance["sentiment"] == "positive"):
+         posSenti.append(instance)
+      elif (instance["sentiment"] == "negative"):
+         negSenti.append(instance)
+      elif (instance["sentiment"] == "neutral"):
+         neutSenti.append(instance)
+
+      print("number of all sentiments: ", len(spanglishData))
+      print("number of positive sentiments: ", len(posSenti))
+      print("number of negative sentiments: ", len(negSenti))
+      print("number of neutral sentiments: ", len(neutSenti))
+
+   return posSenti, negSenti, neutSenti
+
+
+def getXandy(data): 
+   X = []
+   y = []
+
+   for instance in data:
+      X.append(instance["tokens"]) 
+
+      if (instance["sentiment"] == "positive"):
+         y.append(2)
+      elif (instance["sentiment"] == "negative"):
+         y.append(1)
+      elif (instance["sentiment"] == "neutral"):
+         y.append(0)
+
+   return X, y
