@@ -24,11 +24,15 @@ def get_word_embeddings(data):
     # bc.encode(['First do it', 'then do it right', 'then do it better'])
     embeddings = []
     sentiment_embeddings = []
-    data = data[:10]
+    # data = data[9268:9272]
     bar = ChargingBar('Calculating word embeddings\t\t\t', max=len(data))
     for instance in data:
         # should encode the join of the tokens array instead
-        embedding = bc.encode([' '.join(instance['tokens'])])
+        #kinda a hacky fix to an empty tokens array
+        if len(instance['tokens']) == 0:
+            embedding = bc.encode([instance['tweet']])
+        else: 
+            embedding = bc.encode([' '.join(instance['tokens'])])
         embeddings.append(embedding)
         sentiment_embeddings.append({
             "embedding":embedding[0],
