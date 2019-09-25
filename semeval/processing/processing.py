@@ -1,6 +1,10 @@
 from bert_serving.client import BertClient
 from progress.bar import ChargingBar
 
+# need to run this before you run the code
+# the dependencies can be found here https://github.com/hanxiao/bert-as-service
+# 
+# bert-serving-start -model_dir tmp/ -num_worker=2 
 def get_word_embeddings(data):
     bc = BertClient()
     # bc.encode(['First do it', 'then do it right', 'then do it better'])
