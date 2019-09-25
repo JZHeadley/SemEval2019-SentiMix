@@ -3,3 +3,4 @@ codealike.json
 output_tweets.json
 *.pyc
 tmp/
+whole_tweet_embeddings.json

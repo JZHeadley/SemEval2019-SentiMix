@@ -14,4 +14,4 @@ Once we have this the bert model that we want to use needs to be downloaded and 
 ## Running the code
 To be able to use our dependencies in the virtual environment you'll need to run `pipenv shell` to get a session within it.  To make our word embeddings easier we're using [bert as a service](https://github.com/hanxiao/bert-as-service) which needs to be started in a separate shell with `bert-serving-start -model_dir ./multi_cased_L-12_H-768_A-12/ -num_worker=4 ` 
 
-Once the bert as a service server is running we can run our code, so get a new virtual environment session in a new shell and from the root directory run `python semeval/main.py` and everything should start working.
+Once the bert as a service server is running we can run our code, so get a new virtual environment session in a new shell and from the root directory run `python semeval/main.py` and everything should start working
