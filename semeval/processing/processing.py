@@ -2,6 +2,7 @@ from bert_serving.client import BertClient
 from progress.bar import ChargingBar
 from sklearn.model_selection import train_test_split
 
+from torchtext import data, datasets
 # https://github.com/hanxiao/bert-as-service
 
 def splitData(X, y):
@@ -44,3 +45,29 @@ def get_word_embeddings(data):
     # print(embeddings)
     # print(len(embeddings), len(embeddings[0]),len(embeddings[0][0]))
     return embeddings,sentiment_embeddings
+
+def torch_split(dataset):
+    TOKENS = data.Field()
+    LANGID = data.Field()
+    SENTIMENT = data.Field()
+    fields = {
+        "tokens":('tokens',TOKENS), 
+        "langid":("langid",LANGID),
+        "sentiment":("sentiment",SENTIMENT)
+    }
+    train_data,test_data = data.TabularDataset.splits(
+        path='data',
+        train = 'train.json',
+        test = 'test.json',
+        format = 'json',
+        fields = fields
+    )
+    BATCH_SIZE = 64
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    train_iterator, test_iterator = data.BucketIterator.splits(
+        (train_data, test_data), 
+        batch_size = BATCH_SIZE,
+        device = device)
+

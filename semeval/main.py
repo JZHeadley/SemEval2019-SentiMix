@@ -32,27 +32,33 @@ if __name__ =='__main__':
 
     # TODO maybe comment these out
     # starts a bert as a service, because fuck windows path
-    args = get_run_args()
-    server = BertServer(args)
-    server.start()
-    # server.join()
-    run_spinner('Loading Bert as a service\t',20)
+    GET_EMBEDDINGS = False
+    if GET_EMBEDDINGS: 
+        args = get_run_args()
+        server = BertServer(args)
+        server.start()
+        run_spinner('Loading Bert as a service\t',20)
     print("still running")
-    with open('tweets_train.json') as json_file:
+    with open('data/tweets_train.json') as json_file:
         data = json.load(json_file)
-        cleaned = cleaning.clean_tweets(data)
-        lowered = cleaning.lowercase(cleaned)
-        stopped = cleaning.remove_stop_words(lowered)
-        lemmatized = cleaning.lemmatize(stopped)
-        emoji_sentiments = metrics.calculate_emoji_sentiments(lemmatized)
-        metrics.get_emoji_baseline(data,emoji_sentiments)
+    cleaned = cleaning.clean_tweets(data)
+    lowered = cleaning.lowercase(cleaned)
+    stopped = cleaning.remove_stop_words(lowered)
+    lemmatized = cleaning.lemmatize(stopped)
+    emoji_sentiments = metrics.calculate_emoji_sentiments(lemmatized)
+    metrics.get_emoji_baseline(data,emoji_sentiments)
+    with open('data/output_tweets.json', 'w') as fp:
+        json.dump(lemmatized, fp)
+
+    
+    if GET_EMBEDDINGS: 
         embeddings,sentiment_embeddings = processing.get_word_embeddings(lemmatized)
-        with open('output_tweets.json', 'w') as fp:
-            json.dump(lemmatized, fp)
-        
-        with open('whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
+        with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
             print(sentiment_embeddings)
             json.dump(sentiment_embeddings,fp,default=default)
-    shut_args = get_shutdown_parser().parse_args(['-ip','localhost','-port','5555','-timeout','5000'])
-    BertServer.shutdown(shut_args)
+    
+        shut_args = get_shutdown_parser().parse_args(['-ip','localhost','-port','5555','-timeout','5000'])
+        BertServer.shutdown(shut_args)
+
+    # processing.torch_split(lemmatized)
 

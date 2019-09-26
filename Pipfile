@@ -12,6 +12,8 @@ google-cloud-translate = "*"
 spacy = "*"
 progress = "*"
 tensorflow = "*"
+torchtext = "*"
+
 
 [requires]
 python_version = "3.7"
