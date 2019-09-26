@@ -5,15 +5,14 @@ from sklearn.model_selection import train_test_split
 from torchtext import data, datasets
 # https://github.com/hanxiao/bert-as-service
 
-def splitData(X, y):
-   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)  #, random_state = 42)  #TODO what was the split %? #NOTE random_State is a seed. used for debugging
+def splitData(x,y):
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)  #, random_state = 42)  #TODO what was the split %? #NOTE random_State is a seed. used for debugging
+    print("number of X train: ", len(x_train))
+    print("number of X test: ", len(x_test))
+    print("number of y train: ", len(y_train))
+    print("number of y test: ", len(y_test))
 
-   print("number of X train: ", len(X_train))
-   print("number of X test: ", len(X_test))
-   print("number of y train: ", len(y_train))
-   print("number of y test: ", len(y_test))
-
-   return X_train, X_test, y_train, y_test
+    return x_train, x_test, y_train, y_test
 
 
 # need to run this before you run the code
@@ -25,7 +24,6 @@ def get_word_embeddings(data):
     # bc.encode(['First do it', 'then do it right', 'then do it better'])
     embeddings = []
     sentiment_embeddings = []
-    # data = data[9268:9272]
     bar = ChargingBar('Calculating word embeddings\t\t\t', max=len(data))
     for instance in data:
         # should encode the join of the tokens array instead
@@ -36,8 +34,8 @@ def get_word_embeddings(data):
             embedding = bc.encode([' '.join(instance['tokens'])])
         embeddings.append(embedding)
         sentiment_embeddings.append({
-            "embedding":embedding[0],
-            "sentiment":instance['sentiment']
+            "embedding": embedding[0],
+            "sentiment": instance['sentiment']
         })
         bar.next()
 

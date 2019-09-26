@@ -52,13 +52,19 @@ if __name__ =='__main__':
 
     
     if GET_EMBEDDINGS: 
-        embeddings,sentiment_embeddings = processing.get_word_embeddings(lemmatized)
+        _, embeddings = processing.get_word_embeddings(lemmatized)
         with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
-            print(sentiment_embeddings)
-            json.dump(sentiment_embeddings,fp,default=default)
+            print(embeddings)
+            json.dump(embeddings,fp,default=default)
     
         shut_args = get_shutdown_parser().parse_args(['-ip','localhost','-port','5555','-timeout','5000'])
         BertServer.shutdown(shut_args)
-
+    else:
+        with open('data/whole_tweet_embeddings.json') as fp:
+            embeddings = json.load(fp)
+        x = [embedding['embedding'] for embedding in embeddings]
+        y = [ 0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2 for embedding in data]
+        x_train,x_test,y_train,y_test = processing.splitData(x,y)
+    # x_train,x_test,y_train,y_test = processing.splitData(lemmatized)
     # processing.torch_split(lemmatized)
 
