@@ -2,8 +2,10 @@ import re
 import emoji
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import classification_report
+
 from progress.bar import ChargingBar
+
 
 # https://stackoverflow.com/a/43146653/5472958
 def extract_emojis(str):
@@ -76,18 +78,9 @@ def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true
 
 
 def scorer(y_true, y_pred):
-   accuracy = accuracy_score(y_true, y_pred)
-   error = 1.0 - accuracy
-   cm = confusion_matrix(y_true, y_pred)
-   averagePrecisonRecallFScore = precision_recall_fscore_support(y_true, y_pred, average='macro') #TODO what average to use?
-   perLabel = precision_recall_fscore_support(y_true, y_pred, average=None,
-      labels=[0,1,2])
-
-   print(cm)
-   print("accuracy: ", accuracy)
-   print("error: ", error)
-   print("averagePrecisonRecallFScore: ", averagePrecisonRecallFScore)
-   print("perLabel preciosn, recall, and fscore: ", perLabel)
+   print("accuracy: ",accuracy_score(y_true, y_pred))
+   print(confusion_matrix(y_true, y_pred))
+   print(classification_report(y_true, y_pred))
 
 
 def getUniqueTokens(data):
