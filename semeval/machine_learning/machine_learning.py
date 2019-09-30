@@ -7,7 +7,10 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
-	
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
+from alive_progress import alive_bar
+
 
 # TODO change the part 1 portion
 def machine_learning(x_train, x_test, y_train, y_test):
@@ -26,7 +29,7 @@ def machine_learning(x_train, x_test, y_train, y_test):
     names = []
     for name, model in models:
         #NOTE random_State is a seed. used for debugging and comparing performance of different ml models
-        kfold = model_selection.KFold(n_splits=10, random_state=42) 
+        kfold = model_selection.KFold(n_splits=10, random_state=42)
         cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
         results.append(cv_results)
         names.append(name)
@@ -52,7 +55,7 @@ def machine_learning(x_train, x_test, y_train, y_test):
 def logisticRegression(x_train, x_test, y_train, y_test):
     print("LogisticRegression")
     # Make predictions on validation dataset
-    # NOTE for solver param: For multiclass problems, only ‘newton-cg’, ‘sag’, ‘saga’ and ‘lbfgs’ handle multinomial loss; 
+    # NOTE for solver param: For multiclass problems, only ‘newton-cg’, ‘sag’, ‘saga’ and ‘lbfgs’ handle multinomial loss;
     # NOTE solver = solver : str, {‘newton-cg’, ‘lbfgs’, ‘sag’, ‘saga’}
     clf = LogisticRegression(solver='saga', multi_class='multinomial', max_iter=5000)
     clf.fit(x_train, y_train)
@@ -115,3 +118,23 @@ def supportVectorClassification(x_train, x_test, y_train, y_test):
     predictions = svc.predict(x_test)
     # TODO should I just add the metrics stuff here?
     return predictions
+
+
+def paramOptimizer(x_train,y_train,x_test,y_test):
+	#with alive_bar(len(scores)) as bar:
+		#bar()
+	print("Start of Optimzations: ")
+	tuned_parameters = [{'kernel': ['rbf'], 'gamma': [0.0001,0.001, 0.01, 0.1],'C': [1,10,100,1000]}]
+	scores = ['f1_weighted']
+	clf = GridSearchCV(SVC(), tuned_parameters, cv=2,scoring='f1_weighted')
+	clf.fit(x_train, y_train)
+	print("Best parameters set found on development set: ", clf.best_params_)
+	print("Grid scores on development set:\n")
+	means = clf.cv_results_["mean_test_score"]
+	stds = clf.cv_results_["std_test_score"]
+	for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+		print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+	print('\nDetailed classification report:\n')
+	y_true, y_pred = y_test, clf.predict(x_test)
+	print(classification_report(y_true, y_pred))
+	return clf.best_params_
