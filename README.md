@@ -22,9 +22,7 @@ Once we have this the bert model that we want to use needs to be downloaded and 
 ## Running the code
 ~~To be able to use our dependencies in the virtual environment you'll need to run `pipenv shell` to get a session within it.  To make our word embeddings easier we're using [bert as a service](https://github.com/hanxiao/bert-as-service) which needs to be started in a separate shell with `bert-serving-start -model_dir ./multi_cased_L-12_H-768_A-12/ -num_worker=4 `~~ Swapped to running the server with code so don't need to start it separately anymore
 
-
-Once the bert as a service server is running we can run our code, so get a new virtual environment session in a new shell and from the root directory run `python semeval/main.py -model_dir <path to model dir> -num_worker=2` and everything should start working
-
+To run the code you'll first have to enter into a pipenv virtual environment with `pipenv shell` this should give you all the packages you installed earlier with `pipenv install` and will allow you to run everything.  From here  have some command line arguments that enable or disable certain parts of the code, but for the first run you'll want to start with `python semeval/main.py -model_dir <path to model dir> -num_worker=2 --clean --embeddings --ml`.  That will run the cleaning of the tweets, get the word embeddings, and run the machine learning models on that.  When you clean the tweets and get the embeddings intermediate files are written out so you don't have to wait forever again, which is why we have them optioned this way so we can easily disable them while developing further portions. 
 
 #### Sample Training Data
 ```conll
