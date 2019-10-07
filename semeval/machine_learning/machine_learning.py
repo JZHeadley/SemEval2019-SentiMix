@@ -114,9 +114,26 @@ def supportVectorClassification(x_train, x_test, y_train, y_test):
     svc.fit(x_train, y_train)
     predictions = svc.predict(x_test)
     return predictions
-
-
-def paramOptimizer(x_train,y_train,x_test,y_test):
+# KARUN - optimizes logistic regression model using the data
+def logregOptimizer(x_train,y_train,x_test,y_test):
+    # Create hyperparameter options
+    tuned_parameters = [{'C': [0.001, 0.01, 0.1, 1, 10, 100], 'penalty'=['l1', 'l2', 'elasticnet']}]
+    scores = ['f1_weighted']
+    # Create grid search using 5-fold cross validation
+    clf = GridSearchCV(linear_model.LogisticRegression(), hyperparameters, cv=5, scoring='f1_weighted')
+    clf.fit(x_train, y_train)
+    print("Best parameters set found on development set: ", clf.best_params_)
+	print("Grid scores on development set:\n")
+	means = clf.cv_results_["mean_test_score"]
+	stds = clf.cv_results_["std_test_score"]
+	for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+		print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+	print('\nDetailed classification report:\n')
+	y_true, y_pred = y_test, clf.predict(x_test)
+	print(classification_report(y_true, y_pred))
+	return clf.best_params_
+# KARUN - optimizes Support Vector Classification model using the data
+def svcOptimizer(x_train,y_train,x_test,y_test):
 	#with alive_bar(len(scores)) as bar:
 		#bar()
 	print("Start of Optimzations: ")
@@ -131,7 +148,7 @@ def paramOptimizer(x_train,y_train,x_test,y_test):
 
 	for mean, std, params in zip(means, stds, clf.cv_results_['params']):
 		print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
-        
+
 	print('\nDetailed classification report:\n')
 	y_true, y_pred = y_test, clf.predict(x_test)
 	print(classification_report(y_true, y_pred))
