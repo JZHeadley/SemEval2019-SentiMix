@@ -9,9 +9,10 @@ from torchtext import data, datasets
 
 # TODO is it worth noramlizing the embeddings? https://stats.stackexchange.com/questions/177905/should-i-normalize-word2vecs-word-vectors-before-using-them
 
+# ALWIN
 def splitData(x,y):
     #NOTE random_State is a seed. used for debugging and comparing performance of different ml models
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state = 42)  #TODO what was the split %? 
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state = 42) 
     # print("number of X train: ", len(x_train))
     # print("number of X test: ", len(x_test))
     # print("number of y train: ", len(y_train))
@@ -20,6 +21,7 @@ def splitData(x,y):
     return x_train, x_test, y_train, y_test
 
 
+# ZEPHYR
 # need to run this before you run the code
 # the dependencies can be found here https://github.com/hanxiao/bert-as-service
 # 
@@ -54,6 +56,7 @@ def get_word_embeddings(data):
 # checks if using bert for the whole tweet gives a different result than averaging each word embedding
 # TODO if you get a different embedding, make a json file of the averaged word embedding
 # TODO try a different combo method other than averaging
+# ALWIN - an other version of bert, per word and not per tweet
 def compare_word_embeddings(data): 
     data = data[:1]
     bc = BertClient()
@@ -98,11 +101,11 @@ def compare_word_embeddings(data):
     bar.finish()
     return 
 
-
-# TODO do I need to append the y value in this np array?
+# ALWIN
 def convert_to_numpy(data):
     np_data = np.array(data)
 
+    # print statements are here to ensure that teh outcome is the proper shapes, also ensures embeddings worked
     # print("np_data shape: ")
     # print(np_data.shape)
 
@@ -138,4 +141,3 @@ def torch_split(dataset):
         (train_data, test_data), 
         batch_size = BATCH_SIZE,
         device = device)
-

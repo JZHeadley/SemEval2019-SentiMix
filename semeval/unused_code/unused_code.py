@@ -8,8 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.metrics import classification_report
 
-# TODO pass in the cleaned data I suppose. maybe probaly clean based on given tokens and then combine the tokens here?
-# NOTE This is one my favorite method names of all time
+# ALWIN - was replaced by bert-as-a-service
 def prepareForBert(data):
    # Load pre-trained model tokenizer (vocabulary)
    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased') 
@@ -26,7 +25,7 @@ def prepareForBert(data):
    bertSentenceReprenstations = []
    for line in data:
       text = " ".join(line["tokens"])
-      marked_text = "[CLS] " + text + " [SEP]" # TODO This is assuming a whole tweet is a single sentence rn. fix dis shiz homz
+      marked_text = "[CLS] " + text + " [SEP]" # TODO This is assuming a whole tweet is a single sentence rn
 
       tokenized_text = tokenizer.tokenize(marked_text)
 
@@ -145,7 +144,7 @@ def pytorchstuff(spanglishData):
 #         return logits
 
 
-
+# ALWIN - used for the above bert attempt 1
 def createTSVFiles(spanglishData):
    with open('tsv_tweets.tsv', 'w', encoding="utf8") as fp:
       fp.write("sentence\tlabel")
@@ -158,6 +157,7 @@ def createTSVFiles(spanglishData):
    #       print(line)
 
 
+# ALWIN - used for the above bert attempt 1
 def createSplitTSVFiles(X_train, X_test, y_train, y_test):
    if ((len(X_train) != len(y_train)) or (len(X_test) != len(y_test))):
       print("something went wrong when splitting the data")

@@ -77,15 +77,16 @@ def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true
    scorer(y_true, y_pred)
 
 
+# ALWIN
 def scorer(y_true, y_pred):
    print("accuracy: ",accuracy_score(y_true, y_pred))
    print(confusion_matrix(y_true, y_pred))
    print(classification_report(y_true, y_pred))
 
 
+# ALWIN
 def getUniqueTokens(data):
    uniqueTokens = {}
-
    for line in data: # needs to be strings
       for token in line['tokens']:
          if token not in uniqueTokens: 
@@ -93,10 +94,10 @@ def getUniqueTokens(data):
          uniqueTokens[token] += 1
 
    print("number of unique tokens: ", len(uniqueTokens))
-
    return uniqueTokens
 
 
+# ALWIN
 def getDataBySentiment(data): 
    posSenti = []
    negSenti = []
@@ -121,6 +122,7 @@ def getDataBySentiment(data):
    return posSenti, negSenti, neutSenti
 
 
+# ALWIN
 def getXandy(data): 
    X = []
    y = []

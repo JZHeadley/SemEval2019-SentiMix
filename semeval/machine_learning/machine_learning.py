@@ -12,8 +12,9 @@ from sklearn.metrics import classification_report
 from alive_progress import alive_bar
 
 
+# ALWIN
 # TODO change the part 1 portion
-def machine_learning(x_train, x_test, y_train, y_test):
+def machine_learning(X_train, X_test, Y_train, Y_test):
     # Spot Check Algorithms
     models = []
     models.append(('LR', LogisticRegression(solver='liblinear', multi_class='ovr')))
@@ -22,6 +23,8 @@ def machine_learning(x_train, x_test, y_train, y_test):
     models.append(('CART', DecisionTreeClassifier()))
     models.append(('NB', GaussianNB()))
     models.append(('SVM', SVC(gamma='auto')))
+
+    scoring = None # TODO change this, so its actaully usable
 
     # data split validation for part 1
     # evaluate each model in turn
@@ -41,7 +44,7 @@ def machine_learning(x_train, x_test, y_train, y_test):
     results = []
     names = []
     for name, model in models:
-        kfold = model_selection.KFold(n_splits=10, random_state=seed)
+        kfold = model_selection.KFold(n_splits=10, random_state=4)
         cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
         results.append(cv_results)
         names.append(name)
@@ -49,74 +52,67 @@ def machine_learning(x_train, x_test, y_train, y_test):
         print(msg)
 
 
-# TODO play with all hyper params
 # sklearn models
 # linear models
+# ALWIN
 def logisticRegression(x_train, x_test, y_train, y_test):
     print("LogisticRegression")
     # Make predictions on validation dataset
+    # list of possible params
     # NOTE for solver param: For multiclass problems, only ‘newton-cg’, ‘sag’, ‘saga’ and ‘lbfgs’ handle multinomial loss;
     # NOTE solver = solver : str, {‘newton-cg’, ‘lbfgs’, ‘sag’, ‘saga’}
     clf = LogisticRegression(solver='saga', multi_class='multinomial', max_iter=5000)
     clf.fit(x_train, y_train)
     predictions = clf.predict(x_test)
-    # TODO should I just add the metrics stuff here?
     return predictions
 
 
+# ALWIN
 def linearDiscriminantAnalysis(x_train, x_test, y_train, y_test):
     print("LinearDiscriminantAnalysis")
-    # Make predictions on validation dataset
+    # list of possible params:
     # NOTE solver = solver : svd, lsqr, eigen
     lda = LinearDiscriminantAnalysis(solver='eigen')
     lda.fit(x_train, y_train)
     predictions = lda.predict(x_test)
-    # TODO should I just add the metrics stuff here?
     return predictions
 
 
 # non-linear models
+# ALWIN
 def knn(x_train, x_test, y_train, y_test):
     print("knn")
-    # Make predictions on validation dataset
     k = 15
     knn = KNeighborsClassifier(n_neighbors=k)
     knn.fit(x_train, y_train)
     predictions = knn.predict(x_test)
-    # TODO should I just add the metrics stuff here?
     return predictions
 
 
+# ALWIN
 def decisionTreeClassifier(x_train, x_test, y_train, y_test):
     print("DecisionTreeClassifier")
-    # Make predictions on validation dataset
-    # TODO theres lots of hyper params to try
     dtc = DecisionTreeClassifier()
     dtc.fit(x_train, y_train)
     predictions = dtc.predict(x_test)
-    # TODO should I just add the metrics stuff here?
     return predictions
 
 
+# ALWIN
 def gaussianNB(x_train, x_test, y_train, y_test):
     print("GaussianNB")
-    # Make predictions on validation dataset
-    # TODO theres lots of hyper params to try
     gnb = GaussianNB()
     gnb.fit(x_train, y_train)
     predictions = gnb.predict(x_test)
-    # TODO should I just add the metrics stuff here?
     return predictions
 
 
+# ALWIN
 def supportVectorClassification(x_train, x_test, y_train, y_test):
     print("Support Vector Classification")
-    # Make predictions on validation dataset
-    # TODO theres lots of hyper params to try
     svc = SVC(gamma='auto')
     svc.fit(x_train, y_train)
     predictions = svc.predict(x_test)
-    # TODO should I just add the metrics stuff here?
     return predictions
 
 
@@ -132,8 +128,10 @@ def paramOptimizer(x_train,y_train,x_test,y_test):
 	print("Grid scores on development set:\n")
 	means = clf.cv_results_["mean_test_score"]
 	stds = clf.cv_results_["std_test_score"]
+
 	for mean, std, params in zip(means, stds, clf.cv_results_['params']):
 		print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+        
 	print('\nDetailed classification report:\n')
 	y_true, y_pred = y_test, clf.predict(x_test)
 	print(classification_report(y_true, y_pred))
