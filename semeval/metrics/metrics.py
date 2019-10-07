@@ -8,10 +8,11 @@ from progress.bar import ChargingBar
 
 
 # https://stackoverflow.com/a/43146653/5472958
+# Zephyr Simple regex pattern that extracts emojis.  Stolen from the above link
 def extract_emojis(str):
   return ''.join(c for c in str if c in emoji.UNICODE_EMOJI)
 
-
+# Zephyr Calculates the emoji map and which emojis should be positive, negative, or unimportant
 def calculate_emoji_sentiments(data, threshold=10):
     regex = re.compile(r'\d+(.*?)[\u263a-\U0001f645]')
     emoji_sentiments={}
@@ -37,7 +38,7 @@ def calculate_emoji_sentiments(data, threshold=10):
     bar.finish()
     return emoji_map
 
-
+# Zephyr Uses the emoji map produced by the above method to calculate accuracy of the map
 def get_emoji_baseline(data,emoji_map):
     predictions =[]
     emoji_tweet_labels =[]

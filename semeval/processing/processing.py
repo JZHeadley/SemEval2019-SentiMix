@@ -8,7 +8,6 @@ from torchtext import data, datasets
 # https://github.com/hanxiao/bert-as-service
 
 # TODO is it worth noramlizing the embeddings? https://stats.stackexchange.com/questions/177905/should-i-normalize-word2vecs-word-vectors-before-using-them
-
 def splitData(x,y):
     #NOTE random_State is a seed. used for debugging and comparing performance of different ml models
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state = 42)  #TODO what was the split %? 
@@ -24,6 +23,7 @@ def splitData(x,y):
 # the dependencies can be found here https://github.com/hanxiao/bert-as-service
 # 
 # bert-serving-start -model_dir tmp/ -num_worker=2 
+# Zephyr method to get embeddings of the tweets
 def get_word_embeddings(data):
     bc = BertClient()
     # bc.encode(['First do it', 'then do it right', 'then do it better'])
@@ -113,8 +113,8 @@ def convert_to_numpy(data):
     # print(data[0])
     return np_data
 
-
-def torch_split(dataset):
+# Zephyr splitting for use in pytorch
+def torch_split(dataset):  
     TOKENS = data.Field()
     LANGID = data.Field()
     SENTIMENT = data.Field()
