@@ -34,7 +34,7 @@ def write_csv_embeddings(embeddings):
     csv_embeddings = []
     for i,embedding in enumerate(embeddings):
         csv_embeddings.append(embedding['embedding'])
-        csv_embeddings[i].append(0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2)
+        csv_embeddings[i]=np.append(csv_embeddings[i],0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2)
     # print(csv_embeddings[:2])
     with open('data/embeddings.csv', 'w') as writeFile:
         writer = csv.writer(writeFile)
@@ -44,10 +44,10 @@ def write_csv_embeddings(embeddings):
 if __name__ =='__main__':
     # parse_conll_to_json('train_conll_spanglish.txt','tweets_train.json')
 
-    CLEAN_DATA = False
-    RUN_PROCESSING = False
-    WRITE_CSV = False
-    GET_EMBEDDINGS = False
+    CLEAN_DATA = True
+    RUN_PROCESSING = True
+    WRITE_CSV = True
+    GET_EMBEDDINGS = True
     if GET_EMBEDDINGS: 
         args = get_run_args()
         server = BertServer(args)
@@ -56,6 +56,7 @@ if __name__ =='__main__':
     if CLEAN_DATA:
         with open('data/tweets_train.json') as json_file:
             data = json.load(json_file)
+            # data = data[:1000]
         cleaned = cleaning.clean_tweets(data)
         lowered = cleaning.lowercase(cleaned)
         stopped = cleaning.remove_stop_words(lowered)
@@ -96,10 +97,6 @@ if __name__ =='__main__':
     logisticRegressionPredictions = machine_learning.logisticRegression(x_train,x_test,y_train,y_test)
     metrics.scorer(y_test, logisticRegressionPredictions)
 
-    # linearDiscriminantAnalysis
-    linearDiscriminantAnalysis_predictions = machine_learning.linearDiscriminantAnalysis(x_train,x_test,y_train,y_test)
-    metrics.scorer(y_test, linearDiscriminantAnalysis_predictions)
-
     # non-linear models
     # knn
     knn_predictions = machine_learning.knn(x_train,x_test,y_train,y_test)
@@ -116,6 +113,10 @@ if __name__ =='__main__':
     # supportVectorClassification
     svm_predictions = machine_learning.supportVectorClassification(x_train,x_test,y_train,y_test)
     metrics.scorer(y_test, svm_predictions)
+    
+    # linearDiscriminantAnalysis
+    linearDiscriminantAnalysis_predictions = machine_learning.linearDiscriminantAnalysis(x_train,x_test,y_train,y_test)
+    metrics.scorer(y_test, linearDiscriminantAnalysis_predictions)
 
     # copmutes the optimitzed hyper params
     # Set the parameters by cross-validation
