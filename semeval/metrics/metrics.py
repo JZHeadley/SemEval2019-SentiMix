@@ -8,10 +8,11 @@ from progress.bar import ChargingBar
 
 
 # https://stackoverflow.com/a/43146653/5472958
+# Zephyr Simple regex pattern that extracts emojis.  Stolen from the above link
 def extract_emojis(str):
   return ''.join(c for c in str if c in emoji.UNICODE_EMOJI)
 
-
+# Zephyr Calculates the emoji map and which emojis should be positive, negative, or unimportant
 def calculate_emoji_sentiments(data, threshold=10):
     regex = re.compile(r'\d+(.*?)[\u263a-\U0001f645]')
     emoji_sentiments={}
@@ -37,7 +38,7 @@ def calculate_emoji_sentiments(data, threshold=10):
     bar.finish()
     return emoji_map
 
-
+# Zephyr Uses the emoji map produced by the above method to calculate accuracy of the map
 def get_emoji_baseline(data,emoji_map):
     predictions =[]
     emoji_tweet_labels =[]
@@ -60,6 +61,7 @@ def get_emoji_baseline(data,emoji_map):
     print('Accuracy of emoji map is:',accuracy_score(predictions,emoji_tweet_labels))
 
 
+# ALWIN - predicts the most frequent class for each tweet and computes its score
 # TODO should this be based off of the test set? what happens when X-fold happens? I think im gonna use the whole dataset for this.
 def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true):
    
@@ -77,14 +79,14 @@ def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true
    scorer(y_true, y_pred)
 
 
-# ALWIN
+# ALWIN - computes the score of a given prediciton list, given the correct answers
 def scorer(y_true, y_pred):
    print("accuracy: ",accuracy_score(y_true, y_pred))
    print(confusion_matrix(y_true, y_pred))
    print(classification_report(y_true, y_pred))
 
 
-# ALWIN
+# ALWIN - gets a dictionary of each unique token that appears in the data, along with the frequency count
 def getUniqueTokens(data):
    uniqueTokens = {}
    for line in data: # needs to be strings
@@ -97,7 +99,7 @@ def getUniqueTokens(data):
    return uniqueTokens
 
 
-# ALWIN
+# ALWIN - returns the data split according to their sentiments
 def getDataBySentiment(data): 
    posSenti = []
    negSenti = []
@@ -122,7 +124,7 @@ def getDataBySentiment(data):
    return posSenti, negSenti, neutSenti
 
 
-# ALWIN
+# ALWIN - returns X (the tweet data) and y (the sentiment)
 def getXandy(data): 
    X = []
    y = []

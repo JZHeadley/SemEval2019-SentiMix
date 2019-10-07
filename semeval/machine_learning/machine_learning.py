@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 from alive_progress import alive_bar
 
 
-# ALWIN
+# ALWIN - runs  Logistic Regression, Linear Discriminant Analysis, knn, Decision Tree Classifier, Gaussian NB, and Support Vector Classification with cross fold validation
 # TODO change the part 1 portion
 def machine_learning(X_train, X_test, Y_train, Y_test):
     # Spot Check Algorithms
@@ -54,7 +54,7 @@ def machine_learning(X_train, X_test, Y_train, Y_test):
 
 # sklearn models
 # linear models
-# ALWIN
+# ALWIN - performs Logistic Regression on data
 def logisticRegression(x_train, x_test, y_train, y_test):
     print("LogisticRegression")
     # Make predictions on validation dataset
@@ -67,7 +67,7 @@ def logisticRegression(x_train, x_test, y_train, y_test):
     return predictions
 
 
-# ALWIN
+# ALWIN - performs Logistic Regression on data
 def linearDiscriminantAnalysis(x_train, x_test, y_train, y_test):
     print("LinearDiscriminantAnalysis")
     # list of possible params:
@@ -79,7 +79,7 @@ def linearDiscriminantAnalysis(x_train, x_test, y_train, y_test):
 
 
 # non-linear models
-# ALWIN
+# ALWIN - creates a knn model using the data
 def knn(x_train, x_test, y_train, y_test):
     print("knn")
     k = 15
@@ -89,7 +89,7 @@ def knn(x_train, x_test, y_train, y_test):
     return predictions
 
 
-# ALWIN
+# ALWIN - creates a Decision Tree Classifier model using the data
 def decisionTreeClassifier(x_train, x_test, y_train, y_test):
     print("DecisionTreeClassifier")
     dtc = DecisionTreeClassifier()
@@ -98,7 +98,7 @@ def decisionTreeClassifier(x_train, x_test, y_train, y_test):
     return predictions
 
 
-# ALWIN
+# ALWIN - creates a Gaussian NB model using the data
 def gaussianNB(x_train, x_test, y_train, y_test):
     print("GaussianNB")
     gnb = GaussianNB()
@@ -107,7 +107,7 @@ def gaussianNB(x_train, x_test, y_train, y_test):
     return predictions
 
 
-# ALWIN
+# ALWIN - creates a Support Vector Classification model using the data
 def supportVectorClassification(x_train, x_test, y_train, y_test):
     print("Support Vector Classification")
     svc = SVC(gamma='auto')

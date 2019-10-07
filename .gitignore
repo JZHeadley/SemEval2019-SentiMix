@@ -6,3 +6,5 @@ tmp/
 whole_tweet_embeddings.json
 *.tar.bz2
 *.zip
+*.csv
+*.tsv

@@ -7,7 +7,7 @@ from spacy.lemmatizer import Lemmatizer
 from spacy.lang.en import LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES
 
 from progress.bar import ChargingBar
-
+# Zephyr lemmatizing the tweets
 def lemmatize(data):
     output=[]
     lemmatizerEn = Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)    
@@ -39,7 +39,7 @@ def lemmatize(data):
         bar.next()
     bar.finish()
     return output
-
+# Zephyr cleaning  urls and @mentions out of the tweets
 def clean_tweets(data):
     output=[]
     urlrx = re.compile(r'^https?:\/\/.*[\r\n]*')
@@ -73,7 +73,7 @@ def clean_tweets(data):
         bar.next()
     bar.finish()
     return output
-
+# Zephyr Removing english and spanish stop words
 def remove_stop_words(data):
     spacy_enstopwords = spacy.lang.en.stop_words.STOP_WORDS
     spacy_esstopwords = spacy.lang.es.stop_words.STOP_WORDS
@@ -108,7 +108,8 @@ def remove_stop_words(data):
         bar.next()
     bar.finish()
     return output
-
+    
+# Zephyr lowercasing everything
 def lowercase(data):
     output=[]
     bar = ChargingBar('Lowercasing tokens\t\t\t', max=len(data))

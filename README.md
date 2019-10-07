@@ -23,6 +23,7 @@ Inorder to compute a baseline for the results to be compared against, we deterem
 
 This project also attempted a naive approach to classifying tweets via emojis. This consisted of creating a map of all emojis that appeared in the given tweets. Then by looping through by each tweet, everytime an emoji was seen, increment its dictionary value if the tweet was 'positive' and decrementing the value if the tweet had a sentiment of 'negative.' 'Neutral tweets had no impact on an emoji's value. Predicitions would occur by summing up the collective value of each emoji that appeared in a agiven tweet and classifying said tweet as 'positive' if the emoji score was above zero, 'negative' if the score was below zero, and 'neutral' if the sum was zero. For tweets that contained no emojis, the baseline approach was used.
 
+This project assumes that a 'positive' sentiment gets assigned a numeric value of '2','negative' gets assigned to '1,' and the 'neutral' sentiment gets to the value of '0.'
 
 #### Sample Training Data
 meta	1	positive

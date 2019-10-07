@@ -4,11 +4,12 @@ from googletrans import Translator
 import time
 
 import spacy
-
+# Zephyr Trying to translate things from spanish to english
 def translate_from_spanish(string_to_translate, translator):
     # return translator.translate(string_to_translate, source_language='es')
     return translator.translate(string_to_translate, src='es',dest='en')
 
+# Zephyr a hacky version of translating
 def translate_text_hacky():
     translator = Translator()
     #with open('spanglish_trial_release.json') as json_file:
@@ -41,6 +42,8 @@ def translate_text_hacky():
             with open('translatedTweets.json', 'w') as fp:
                 json.dump(output, fp)
 
+# Zephyr A better way of translating using official google client. 
+# Unfortunately this way would cost money so is not an option
 def translate_google(data):
     client = translate.Client()
     output = []

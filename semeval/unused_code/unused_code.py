@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.metrics import classification_report
 
-# ALWIN - was replaced by bert-as-a-service
+# ALWIN - was replaced by bert-as-a-service. Reffered to as 'bert attempt 1'
 def prepareForBert(data):
    # Load pre-trained model tokenizer (vocabulary)
    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased') 
@@ -118,6 +118,7 @@ def prepareForBert(data):
    return bertPreparedTweets
 
 
+# ALWIN - first partial attempt at pytorch...
 def pytorchstuff(spanglishData):
    TEXT = data.Field(tokenize = None) # TODO chcek if tokenize None works
    LABEL = data.LabelField(dtype = torch.float)
