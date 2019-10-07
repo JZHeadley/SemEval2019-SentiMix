@@ -8,18 +8,19 @@ from metrics import metrics
 from processing import processing
 from machine_learning import machine_learning
 from progress.spinner import Spinner
+import csv 
 import numpy as np
 
 # python3 main.py bert-serving-start -model_dir /tmp/english_L-12_H-768_A-12/ -num_worker=4
 # python3 ./semeval/main.py bert-serving-start -model_dir /tmp/english_L-12_H-768_A-12/ -num_worker=1
-
+# Zephyr Just a helper method for code cleanliness
 def run_spinner(label,duration):
     spinner = Spinner(label)
     for i in range(0,duration*10):
         time.sleep(.1)
         spinner.next()
     spinner.finish()
-
+# Zephyr needed for unpacking  and packing the json
 def default(obj):
     if type(obj).__module__ == np.__name__:
         if isinstance(obj, np.ndarray):
@@ -28,19 +29,30 @@ def default(obj):
             return obj.item()
     raise TypeError('Unknown type:', type(obj))
 
+# Zephyr writes embeddings as a csv for input into better processing libraries (or custom written cuda knn...)
+def write_csv_embeddings(embeddings):
+    csv_embeddings = []
+    for i,embedding in enumerate(embeddings):
+        csv_embeddings.append(embedding['embedding'])
+        csv_embeddings[i].append(0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2)
+    # print(csv_embeddings[:2])
+    with open('data/embeddings.csv', 'w') as writeFile:
+        writer = csv.writer(writeFile)
+        writer.writerows(csv_embeddings)
+    return csv_embeddings
+
 if __name__ =='__main__':
     # parse_conll_to_json('train_conll_spanglish.txt','tweets_train.json')
 
-    GET_EMBEDDINGS = False
     CLEAN_DATA = False
-
-    if GET_EMBEDDINGS:
-        # starts a bert as a service
+    RUN_PROCESSING = False
+    WRITE_CSV = False
+    GET_EMBEDDINGS = False
+    if GET_EMBEDDINGS: 
         args = get_run_args()
         server = BertServer(args)
         server.start()
         run_spinner('Loading Bert as a service\t',20)
-
     if CLEAN_DATA:
         with open('data/tweets_train.json') as json_file:
             data = json.load(json_file)
@@ -62,32 +74,27 @@ if __name__ =='__main__':
         with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
             print(embeddings)
             json.dump(embeddings,fp,default=default)
-
+        if WRITE_CSV:
+            write_csv_embeddings(embeddings)
+    
         shut_args = get_shutdown_parser().parse_args(['-ip','localhost','-port','5555','-timeout','5000'])
         BertServer.shutdown(shut_args)
-
-    # TODO return this to an else?
-    with open('data/whole_tweet_embeddings.json') as fp:
-        embeddings = json.load(fp)
+    else:
+        with open('data/whole_tweet_embeddings.json') as fp:
+            embeddings = json.load(fp)
     x = [embedding['embedding'] for embedding in embeddings]
-    processing.convert_to_numpy(x)
     y = [ 0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2 for embedding in embeddings]
-    processing.convert_to_numpy(y)
-    x_train,x_test,y_train,y_test = processing.splitData(x,y)
-
-    # # linear models
-    # logisticRegression
-    # logisticRegressionPredictions = machine_learning.logisticRegression(x_train,x_test,y_train,y_test)
-    # metrics.scorer(y_test, logisticRegressionPredictions)
-
-    # # linearDiscriminantAnalysis
-    #linearDiscriminantAnalysis_predictions = machine_learning.linearDiscriminantAnalysis(x_train,x_test,y_train,y_test)
-    #metrics.scorer(y_test, linearDiscriminantAnalysis_predictions)
+    x_train,x_test,y_train,y_test = processing.splitData(np.array(x),np.array(y))
+    # processing.torch_split(lemmatized)
 
     # # non-linear models
     # # knn
     # knn_predictions = machine_learning.knn(x_train,x_test,y_train,y_test)
     # metrics.scorer(y_test, knn_predictions)
+
+    # # linearDiscriminantAnalysis
+    linearDiscriminantAnalysis_predictions = machine_learning.linearDiscriminantAnalysis(x_train,x_test,y_train,y_test)
+    metrics.scorer(y_test, linearDiscriminantAnalysis_predictions)
 
     # # decisionTreeClassifier
     # decisionTreeClassifier_predictions = machine_learning.decisionTreeClassifier(x_train,x_test,y_train,y_test)
@@ -97,10 +104,21 @@ if __name__ =='__main__':
     # gaussianNB_predictions = machine_learning.gaussianNB(x_train,x_test,y_train,y_test)
     # metrics.scorer(y_test, gaussianNB_predictions)
 
+    # # linear models
+    # logisticRegression
+    # logisticRegressionPredictions = machine_learning.logisticRegression(x_train,x_test,y_train,y_test)
+    # metrics.scorer(y_test, logisticRegressionPredictions)
+
     # # supportVectorClassification
+    # supportVectorClassification_predictions = machine_learning.supportVectorClassification(x_train,x_test,y_train,y_test)
+    # metrics.scorer(y_test, supportVectorClassification_predictions)
+
+
     # Set the parameters by cross-validation
-    params = machine_learning.paramOptimizer(x_train,y_train,x_test,y_test)
-    #paramOptimizer
+    # params = machine_learning.paramOptimizer(x_train,y_train,x_test,y_test)
+    # paramOptimizer
+
+
 
 #Best parameters set found on development set:
 
@@ -169,8 +187,6 @@ if __name__ =='__main__':
     #on 1: 0.406 (+/-0.008) for {'C': 10, 'gamma': 0.001, 'kernel': 'rbf'}
     #on 1: 0.398 (+/-0.005) for {'C': 100, 'gamma': 0.0001, 'kernel': 'rbf'}
     #on 1: 0.421 (+/-0.019) for {'C': 100, 'gamma': 0.001, 'kernel': 'rbf'}
-    # supportVectorClassification_predictions = machine_learning.supportVectorClassification(x_train,x_test,y_train,y_test)
-    # metrics.scorer(y_test, supportVectorClassification_predictions)
 
 
 # baseline results:
