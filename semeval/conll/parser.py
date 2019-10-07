@@ -1,6 +1,4 @@
-
-
-
+# Zephyr - parses their awful conll format to something actually usable...
 def parse_conll_to_json(inputPath,outputPath):
     with open(input) as fp:
         output =[]
