@@ -4,7 +4,6 @@ from sklearn.model_selection import train_test_split
 
 import numpy as np
 
-from torchtext import data, datasets
 # https://github.com/hanxiao/bert-as-service
 
 # TODO is it worth noramlizing the embeddings? https://stats.stackexchange.com/questions/177905/should-i-normalize-word2vecs-word-vectors-before-using-them
