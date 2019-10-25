@@ -82,14 +82,34 @@ if __name__ =='__main__':
         lowered = cleaning.lowercase(cleaned)
         stopped = cleaning.remove_stop_words(lowered)
         lemmatized = cleaning.lemmatize(stopped)
-        emoji_sentiments = metrics.calculate_emoji_sentiments(lemmatized)
-        metrics.get_emoji_baseline(data,emoji_sentiments)
         with open('data/output_tweets.json', 'w') as fp:
             json.dump(lemmatized, fp)
     else:
         with open('data/output_tweets.json', 'r') as fp:
             lemmatized = json.load(fp)
 
+    # # NOTE in theory, breaks the embedding stuff. Until they are combined, leave it commented out. except for the NOTE line (potentially)
+    # # # preprocessing
+    # data = lemmatized
+    # emojiTweets, nonEmojiTweets = metrics.splitTweetsByEmoji(data) # NOTE use nonEmojiTweets for other methods, combinig the emoji appraoch? TODO
+    # data = emojiTweets
+    # print('len(data): ', len(data))
+    # numOfPosSenti, numOfNeutSenti, numOfNegSenti = metrics.getSentimentCounts(data)
+    # print("number of positive sentiments: ", numOfPosSenti)
+    # print("number of neutral sentiments: ", numOfNeutSenti)
+    # print("number of negative sentiments: ", numOfNegSenti)
+    # mostFrequentSentiment = metrics.getMostFreqSentiment(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
+
+    # # # splitting data
+    # x = [x['tweet'] for x in data]
+    # y = [ 0 if data['sentiment'] == 'negative' else 1 if data['sentiment'] =='neutral' else 2 for data in data]
+    # x_train,x_test,y_train,y_test = processing.splitData(x,y)
+
+    # # # emoji map
+    # emoji_sentiments = metrics.calculate_emoji_sentiments(x_train, y_train)
+    # # print('emoji_sentiments: ', emoji_sentiments)
+    # emojiPredictions = metrics.get_emoji_baseline(x_test, mostFrequentSentiment, emoji_sentiments)
+    # metrics.scorer(y_test, emojiPredictions)
 
     if args.embeddings:
         _, embeddings = processing.get_word_embeddings(lemmatized)

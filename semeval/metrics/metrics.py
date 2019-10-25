@@ -1,4 +1,5 @@
 import re
+import regex
 import emoji
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
@@ -8,64 +9,97 @@ from progress.bar import ChargingBar
 
 
 # https://stackoverflow.com/a/43146653/5472958
-# Zephyr Simple regex pattern that extracts emojis.  Stolen from the above link
-def extract_emojis(str):
-  return ''.join(c for c in str if c in emoji.UNICODE_EMOJI)
+# Alwin, Zephyr Simple regex pattern that extracts emojis and flags.  Stolen from the above link
+def extract_emojis(text):
 
-# Zephyr Calculates the emoji map and which emojis should be positive, negative, or unimportant
-def calculate_emoji_sentiments(data, threshold=10):
-    regex = re.compile(r'\d+(.*?)[\u263a-\U0001f645]')
-    emoji_sentiments={}
-    bar = ChargingBar('Calculating Emoji Map\t\t\t', max=len(data))
-    for instance in data:
-        emojis=extract_emojis(instance['tweet'])
-        sentiment = 1 if  instance['sentiment']=='positive' else -1 if instance['sentiment']=='negative' else 0 
-        for emoji in emojis:
-            if emoji not in emoji_sentiments:
-                emoji_sentiments[emoji] = sentiment
-            else:
-                emoji_sentiments[emoji] = emoji_sentiments[emoji] + sentiment
-        bar.next()
-    sortedEmojis = (sorted((value, key) for (key,value) in emoji_sentiments.items()))
-    # print(sortedEmojis)
-    thresholded_emojis = [x for x in sortedEmojis if x[0] > threshold or x[0] <  -1 * threshold]
-    # print(thresholded_emojis)
-    emoji_map = {}
-    for emoji in thresholded_emojis:
-        emoji_map[emoji[1]] = 1 if emoji[0] > 0 else -1
-    # mapped_emojis = [('positive',emoji[1]) if emoji[0] > 0 else ('negative',emoji[1])  for emoji in thresholded_emojis]
-    # print(emoji_map)
-    bar.finish()
-    return emoji_map
+   allchars = [str for str in text]
+   list = [c for c in allchars if c in emoji.UNICODE_EMOJI]
+   return list
 
-# Zephyr Uses the emoji map produced by the above method to calculate accuracy of the map
-def get_emoji_baseline(data,emoji_map):
-    predictions =[]
-    emoji_tweet_labels =[]
-    bar = ChargingBar('Calculating Emoji Map Accuracy\t\t', max=len(data))
-    for tweet in data:
-        score=0
-        emojis = extract_emojis(tweet['tweet'])
-        bar.next()
-        if len(emojis) > 0:
-            emoji_tweet_labels.append(-1 if tweet['sentiment'] == 'negative' else 1 if tweet['sentiment'] =='positive' else 0)
-        else:
-            continue
-        for emoji in emojis:
-            if emoji in emoji_map:
-                score = score + emoji_map[emoji]
-        label = 1 if score > 0 else -1 if score < 0 else 0
-        predictions.append(label)
-        # print(tweet['sentiment'],label)
-    bar.finish()
-    print('Accuracy of emoji map is:',accuracy_score(predictions,emoji_tweet_labels))
 
+# Alwin, Zephyr Calculates the emoji map and which emojis should be positive, negative, or neutral
+# TODO read add some importance threshold?
+def calculate_emoji_sentiments(x, y):
+   regex = re.compile(r'\d+(.*?)[\u263a-\U0001f645]')
+   emoji_sentiments = {}
+   bar = ChargingBar('Calculating Emoji Map\t\t\t', max=len(x))
+
+   for i in range(len(x)):
+      emojis = extract_emojis(x[i])
+
+      for emoji in emojis:
+         if emoji not in emoji_sentiments:
+            emoji_sentiments[emoji] = {}
+            emoji_sentiments[emoji]['positive'] = 0
+            emoji_sentiments[emoji]['neutral'] = 0
+            emoji_sentiments[emoji]['negative'] = 0
+         
+         if (y[i] == 2): # 'positive'
+            emoji_sentiments[emoji]['positive'] += 1
+         elif (y[i] == 1): # 'neutral'
+            emoji_sentiments[emoji]['neutral'] += 1
+         elif (y[i] == 0): # 'negative'
+            emoji_sentiments[emoji]['negative'] += 1
+         
+      bar.next()
+   bar.finish()
+   return emoji_sentiments
+
+
+# Alwin, Zephyr Uses the emoji maps produced by the above method to calculate accuracy of the map
+def get_emoji_baseline(data, mostFrequentSentiment, emoji_sentiments):
+   predictions =[]
+   bar = ChargingBar('Calculating Emoji Map Accuracy\t\t', max=len(data))
+   for tweet in data:
+      emojis = extract_emojis(tweet)
+
+      if (len(emojis) > 0):
+         emojiSentiment = getEmojiSentiment(emojis, emoji_sentiments)
+         predictedSentiment = emojiSentiment
+      else:
+         predictedSentiment = mostFrequentSentiment
+
+      predictions.append(predictedSentiment)
+      bar.next()
+
+   bar.finish()
+   return predictions
+
+
+# Alwin - given a list of emojis, determines which sentiment to predict based solely on emojis
+def getEmojiSentiment(emojis, emoji_sentiments):
+   if (len(emojis) == 0):
+      print('must pass in emojis')
+      return
+
+   positiveScore = 0
+   neutralScore = 0
+   negativeScore = 0
+
+   for emoji in emojis:
+      if (emoji in emoji_sentiments):
+         positiveScore += emoji_sentiments[emoji]['positive']
+         neutralScore += emoji_sentiments[emoji]['neutral']
+         negativeScore += emoji_sentiments[emoji]['negative']
+
+   maxScore = max(positiveScore, neutralScore, negativeScore)
+
+   if (maxScore == positiveScore):
+      return 2 # 'positive'
+   elif (maxScore == neutralScore):
+      return 1 # 'neutral'
+   else:
+      return 0 # 'negative'
+         
 
 # ALWIN - predicts the most frequent class for each tweet and computes its score
-# TODO should this be based off of the test set? what happens when X-fold happens? I think im gonna use the whole dataset for this.
-def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true):
-   
-   # create y_pred to be init with the most frequent sentiment seen in the data
+def getBaselinePredicitions(mostFrequentSentiment, y_true):
+   y_pred = [mostFrequentSentiment] * len(y_true)
+   scorer(y_true, y_pred)
+
+
+# ALWIN - create y_pred to be init with the most frequent sentiment seen in the data
+def getMostFreqSentiment(numOfPosSenti, numOfNegSenti, numOfNeutSenti):
    sentiToPredict = -1
    mostFrequentSenti = max(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
    if (mostFrequentSenti == numOfPosSenti):
@@ -74,9 +108,7 @@ def getBaselinePredicitions(numOfPosSenti, numOfNegSenti, numOfNeutSenti, y_true
       sentiToPredict = 1
    elif (mostFrequentSenti == numOfPosSenti):
       sentiToPredict = 0
-   y_pred = [sentiToPredict] * len(y_true)
-
-   scorer(y_true, y_pred)
+   return sentiToPredict
 
 
 # ALWIN - computes the score of a given prediciton list, given the correct answers
@@ -84,6 +116,23 @@ def scorer(y_true, y_pred):
    print("accuracy: ",accuracy_score(y_true, y_pred))
    print(confusion_matrix(y_true, y_pred))
    print(classification_report(y_true, y_pred))
+
+
+# ALWIN - returns a list of all tweets that have emojis, and another list of the tweets that dont
+def splitTweetsByEmoji(data):
+   emojiTweets = []
+   nonEmojiTweets = []
+   for instance in data:
+      tweet = instance['tweet']
+      emojis = extract_emojis(tweet)
+      if (len(emojis) > 0):
+         emojiTweets.append(instance)
+      else:
+         nonEmojiTweets.append(instance)
+
+   print('len(emojiTweets): ', len(emojiTweets))
+   print('len(nonEmojiTweets): ', len(nonEmojiTweets))
+   return emojiTweets, nonEmojiTweets 
 
 
 # ALWIN - gets a dictionary of each unique token that appears in the data, along with the frequency count
@@ -100,7 +149,7 @@ def getUniqueTokens(data):
 
 
 # ALWIN - returns the data split according to their sentiments
-def getDataBySentiment(data): 
+def getSentimentCounts(data): 
    posSenti = []
    negSenti = []
    neutSenti = []
@@ -116,12 +165,7 @@ def getDataBySentiment(data):
       elif (instance["sentiment"] == "neutral"):
          neutSenti.append(instance)
 
-      print("number of all sentiments: ", len(spanglishData))
-      print("number of positive sentiments: ", len(posSenti))
-      print("number of negative sentiments: ", len(negSenti))
-      print("number of neutral sentiments: ", len(neutSenti))
-
-   return posSenti, negSenti, neutSenti
+   return len(posSenti), len(neutSenti), len(negSenti)
 
 
 # ALWIN - returns X (the tweet data) and y (the sentiment)
