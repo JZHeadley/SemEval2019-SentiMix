@@ -67,7 +67,7 @@ def parse_arguments():
 if __name__ =='__main__':
     # parse_conll_to_json('train_conll_spanglish.txt','tweets_train.json')
     args = parse_arguments()
-    print(args)
+    print('args: ', args)
     if args.embeddings: 
         bert_args = get_run_args()
         print(bert_args)
@@ -78,22 +78,25 @@ if __name__ =='__main__':
         with open('data/tweets_train.json') as json_file:
             data = json.load(json_file)
             # data = data[:2000]
-        cleaned = cleaning.clean_tweets(data)
-        lowered = cleaning.lowercase(cleaned)
-        stopped = cleaning.remove_stop_words(lowered)
-        lemmatized = cleaning.lemmatize(stopped)
+        data = cleaning.clean_tweets(data)
+        data = cleaning.lowercase(data)
+        data = cleaning.remove_stop_words(data)
+        data = cleaning.lemmatize(data)
         with open('data/output_tweets.json', 'w') as fp:
-            json.dump(lemmatized, fp)
+            json.dump(data, fp)
     else:
         with open('data/output_tweets.json', 'r') as fp:
-            lemmatized = json.load(fp)
+            data = json.load(fp)
+
+    # data = data[:3]
+    # capTweets, nonCappedTweets = metrics.splitTweetsByCaps(data)
+    # data = capTweets
+    # numOfPosSenti, numOfNeutSenti, numOfNegSenti = metrics.getSentimentCounts(data)
 
     # # NOTE in theory, breaks the embedding stuff. Until they are combined, leave it commented out. except for the NOTE line (potentially)
     # # # preprocessing
-    # data = lemmatized
     # emojiTweets, nonEmojiTweets = metrics.splitTweetsByEmoji(data) # NOTE use nonEmojiTweets for other methods, combinig the emoji appraoch? TODO
     # data = emojiTweets
-    # print('len(data): ', len(data))
     # numOfPosSenti, numOfNeutSenti, numOfNegSenti = metrics.getSentimentCounts(data)
     # print("number of positive sentiments: ", numOfPosSenti)
     # print("number of neutral sentiments: ", numOfNeutSenti)
@@ -112,7 +115,7 @@ if __name__ =='__main__':
     # metrics.scorer(y_test, emojiPredictions)
 
     if args.embeddings:
-        _, embeddings = processing.get_word_embeddings(lemmatized)
+        _, embeddings = processing.get_word_embeddings(data)
         with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
             # print(embeddings)
             json.dump(embeddings,fp,default=default)
@@ -128,7 +131,7 @@ if __name__ =='__main__':
     y = [ 0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2 for embedding in embeddings]
 
     # x_train,x_test,y_train,y_test = processing.splitData(np.array(x),np.array(y))
-    # processing.torch_split(lemmatized)
+    # processing.torch_split(data)
 
     processing.convert_to_numpy(y)
     x_train,x_test,y_train,y_test = processing.splitData(x,y)

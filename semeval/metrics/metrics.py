@@ -11,7 +11,6 @@ from progress.bar import ChargingBar
 # https://stackoverflow.com/a/43146653/5472958
 # Alwin, Zephyr Simple regex pattern that extracts emojis and flags.  Stolen from the above link
 def extract_emojis(text):
-
    allchars = [str for str in text]
    list = [c for c in allchars if c in emoji.UNICODE_EMOJI]
    return list
@@ -133,6 +132,31 @@ def splitTweetsByEmoji(data):
    print('len(emojiTweets): ', len(emojiTweets))
    print('len(nonEmojiTweets): ', len(nonEmojiTweets))
    return emojiTweets, nonEmojiTweets 
+
+
+# ALWIN - returns a list of all tweets that have more capital letters than tokens, and another list of the tweets that dont
+def splitTweetsByCaps(data):
+   capTweets = []
+   nonCapTweets = []
+   for instance in data:
+      tweet = instance['tweet']
+      if (checkIfMoreCapsThanTokens(tweet)):
+         capTweets.append(instance)
+      else:
+         nonCapTweets.append(instance)
+
+   print('len(capTweets): ', len(capTweets))
+   print('len(nonCapTweets): ', len(nonCapTweets))
+   return capTweets, nonCapTweets 
+
+
+# Alwin - checks if a list of tokens has >= upper cased letters than number of tokens
+def checkIfMoreCapsThanTokens(tokens):
+   numCaps = sum(1 for c in tokens if c.isupper())
+   print(numCaps, len(tokens))
+   if (numCaps >= len(tokens)):
+      return True
+   return False
 
 
 # ALWIN - gets a dictionary of each unique token that appears in the data, along with the frequency count
