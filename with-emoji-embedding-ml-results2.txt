@@ -1,0 +1,606 @@
+args:  Namespace(clean=False, csv=False, embeddings=False, ml=True)
+here emojisInData:  {'✌': 0, '😂': 0, '😆': 0, '❤': 0, '♥': 0, '😔': 0, '😖': 0, '👌': 0, '💯': 0, '✋': 0, '👊': 0, '👏': 0, '💁': 0, '😢': 0, '😳': 0, '😱': 0, '😭': 0, '😡': 0, '🔫': 0, '😄': 0, '👅': 0, '🙌': 0, '💃': 0, '💙': 0, '👐': 0, '🎧': 0, '👍': 0, '😁': 0, '💕': 0, '😃': 0, '😩': 0, '💔': 0, '😍': 0, '👎': 0, '😒': 0, '❄': 0, '⛄': 0, '😎': 0, '🎉': 0, '😫': 0, '💪': 0, '📓': 0, '📒': 0, '😏': 0, '☺': 0, '😐': 0, '😑': 0, '😋': 0, '😊': 0, '🔥': 0, '✈': 0, '😘': 0, '😛': 0, '🐷': 0, '🎁': 0, '🎋': 0, '🎊': 0, '💣': 0, '💰': 0, '💴': 0, '😟': 0, '😨': 0, '😠': 0, '😌': 0, '🙎': 0, '😬': 0, '⚡': 0, '🐯': 0, '🎈': 0, '💤': 0, '💋': 0, '😦': 0, '😉': 0, '🙅': 0, '🐖': 0, '✊': 0, '🇺': 0, '🇸': 0, '😞': 0, '😝': 0, '😗': 0, '💨': 0, '🍁': 0, '👿': 0, '😓': 0, '🙊': 0, '⚽': 0, '🍻': 0, '👋': 0, '💵': 0, '💷': 0, '💶': 0, '💳': 0, '💸': 0, '💊': 0, '🔪': 0, '💉': 0, '🎶': 0, '😅': 0, '🍚': 0, '😪': 0, '👴': 0, '🙏': 0, '🙈': 0, '😚': 0, '😴': 0, '🍍': 0, '😤': 0, '🙋': 0, '👨': 0, '😷': 0, '😰': 0, '😮': 0, '💂': 0, '🍺': 0, '💜': 0, '😈': 0, '💀': 0, '👤': 0, '🏃': 0, '💥': 0, '🐚': 0, '📝': 0, '🖌': 0, '🏼': 0, '📸': 0, '🤔': 0, '🚨': 0, '🔄': 0, '🤓': 0, '💘': 0, '👭': 0, '☹': 0, '😕': 0, '🔴': 0, '✅': 0, '🐶': 0, '🎥': 0, '💦': 0, '👗': 0, '👔': 0, '🙄': 0, '🍧': 0, '😹': 0, '🐱': 0, '💩': 0, '📍': 0, '⏱': 0, '😻': 0, '😜': 0, '🔙': 0, '🏽': 0, '🐥': 0, '🐵': 0, '🍹': 0, '🎄': 0, '😥': 0, '🌴': 0, '🐸': 0, '☕': 0, '👚': 0, '👖': 0, '👜': 0, '👛': 0, '💄': 0, '🦃': 0, '🦄': 0, '🐣': 0, '👻': 0, '🐳': 0, '👑': 0, '🎀': 0, '📲': 0, '🎓': 0, '🌚': 0, '💞': 0, '🌙': 0, '👼': 0, '🏻': 0, '⚪': 0, '🔵': 0, '☁': 0, '💓': 0, '👠': 0, '✖': 0, '☔': 0, '🎵': 0, '🌸': 0, '👯': 0, '🚌': 0, '🎬': 0, '👉': 0, '🎾': 0, '🎮': 0, '🎤': 0, '🌺': 0, '📷': 0, '🌼': 0, '🌻': 0, '🚢': 0, '☝': 0, '👕': 0, '🤗': 0, '🍾': 0, '⚾': 0, '🎃': 0, '🙍': 0, '🌞': 0, '🐤': 0, '🛳': 0, '👆': 0, '🙃': 0, '✨': 0, '☀': 0, '▶': 0, '🔘': 0, '❣': 0, '〰': 0, '👇': 0, '😀': 0, '⭐': 0, '🇵': 0, '🇷': 0, '🐟': 0, '🙂': 0, '🐼': 0, '📢': 0, '🌊': 0, '🎨': 0, '🍷': 0, '💫': 0, '💻': 0, '📄': 0, '🖊': 0, '🌮': 0, '🍸': 0, '💌': 0, '😾': 0, '💟': 0, '❗': 0, '👺': 0, '👽': 0, '🤘': 0, '🍉': 0, '🌀': 0, '🌟': 0, '😇': 0, '💝': 0, '🌷': 0, '💐': 0, '🙉': 0, '😺': 0, '🌎': 0, '🔝': 0, '⏰': 0, '🚗': 0, '🏆': 0, '🌝': 0, '🔮': 0, '⚠': 0, '🎌': 0, '⚓': 0, '🍀': 0, '🙆': 0, '🚕': 0, '🌄': 0, '💖': 0, '🔆': 0, '🍠': 0, '🍘': 0, '🍢': 0, '🍥': 0, '🎂': 0, '🔊': 0, '🍦': 0, '📚': 0, '👁': 0, '💚': 0, '🍇': 0, '🍓': 0, '🍒': 0, '🆔': 0, '🔞': 0, '🙀': 0, '💆': 0, '📥': 0, '😽': 0, '👾': 0, '🍰': 0, '✂': 0, '👀': 0, '☎': 0, '🌑': 0, '📱': 0, '🍊': 0, '📨': 0, '📩': 0, '❌': 0, '👸': 0, '🍴': 0, '🌃': 0, '👢': 0, '🌌': 0, '👩': 0, '🇲': 0, '🇽': 0, '🍔': 0, '🍕': 0, '🍗': 0, '🎸': 0, '🌤': 0, '🏝': 0, '💼': 0, '🏿': 0, '🍎': 0, '🍐': 0, '👶': 0, '®': 0, '🍡': 0, '🌹': 0, '💎': 0, '⛵': 0, '🍲': 0, '🚖': 0, '🌳': 0, '🌾': 0, '💏': 0, '⬇': 0, '📫': 0, '💗': 0, '🎼': 0, '📻': 0, '🇨': 0, '🇱': 0, '🔬': 0, '🔭': 0, '🎆': 0, '✳': 0, '🌶': 0, '🏾': 0, '🐢': 0, '🛍': 0, '🍫': 0, '♠': 0, '🖕': 0, '🔺': 0, '🌍': 0, '🌏': 0, '📀': 0, '🏀': 0, '🏐': 0, '🏊': 0, '🐰': 0, '🍬': 0, '▪': 0, '💍': 0, '🔜': 0, '🌈': 0, '🌿': 0, '👹': 0, '🇮': 0, '🇹': 0, '💛': 0, '🍃': 0, '⚜': 0, '👙': 0, '🌵': 0, '🌠': 0, '🐧': 0, '⚫': 0, '👣': 0, '🌱': 0, '🍣': 0, '🍱': 0, '📹': 0, '🌲': 0, '🏥': 0, '🍂': 0, '🍭': 0, '🍼': 0, '💮': 0, '👰': 0, '🎩': 0, '👫': 0, '💒': 0, '💭': 0, '🐻': 0, '😶': 0, '🏡': 0, '🏠': 0, '📇': 0, '🐀': 0, '🚶': 0, '📬': 0, '🏈': 0, '🕰': 0, '🐦': 0, '👓': 0, '😲': 0, '🗻': 0, '⛅': 0, '🤒': 0, '📪': 0, '🍿': 0, '🗽': 0, '☂': 0, '✏': 0, '🚷': 0, '🏁': 0, '💑': 0, '👞': 0, '🔅': 0, '🌯': 0, '☢': 0, '🚙': 0, '😼': 0, '🌂': 0, '⌛': 0, '⏳': 0, '🖖': 0, '🐝': 0}
+using:  data/all_avg_tweet_embeddings_with_stopwords_with_emoji_freq.json
+optimizing decision list
+Best parameters set found on development set:  {'max_depth': 19, 'min_samples_split': 270}
+Grid scores on development set:
+
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 10}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 30}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 50}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 70}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 90}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 110}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 130}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 150}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 170}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 190}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 210}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 230}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 250}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 270}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 290}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 310}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 330}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 350}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 370}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 390}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 410}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 430}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 450}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 470}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 490}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 10}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 30}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 50}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 70}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 90}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 110}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 130}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 150}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 170}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 190}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 210}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 230}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 250}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 270}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 290}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 310}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 330}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 350}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 370}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 390}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 410}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 430}
+0.450 (+/-0.013) for {'max_depth': 3, 'min_samples_split': 450}
+0.450 (+/-0.013) for {'max_depth': 3, 'min_samples_split': 470}
+0.450 (+/-0.013) for {'max_depth': 3, 'min_samples_split': 490}
+0.465 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 10}
+0.464 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 30}
+0.465 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 50}
+0.465 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 70}
+0.464 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 90}
+0.465 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 110}
+0.465 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 130}
+0.464 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 150}
+0.465 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 170}
+0.465 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 190}
+0.464 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 210}
+0.463 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 230}
+0.462 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 250}
+0.463 (+/-0.030) for {'max_depth': 5, 'min_samples_split': 270}
+0.463 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 290}
+0.462 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 310}
+0.462 (+/-0.026) for {'max_depth': 5, 'min_samples_split': 330}
+0.463 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 350}
+0.461 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 370}
+0.461 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 390}
+0.461 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 410}
+0.456 (+/-0.032) for {'max_depth': 5, 'min_samples_split': 430}
+0.451 (+/-0.022) for {'max_depth': 5, 'min_samples_split': 450}
+0.449 (+/-0.017) for {'max_depth': 5, 'min_samples_split': 470}
+0.449 (+/-0.017) for {'max_depth': 5, 'min_samples_split': 490}
+0.468 (+/-0.022) for {'max_depth': 7, 'min_samples_split': 10}
+0.471 (+/-0.023) for {'max_depth': 7, 'min_samples_split': 30}
+0.471 (+/-0.027) for {'max_depth': 7, 'min_samples_split': 50}
+0.468 (+/-0.030) for {'max_depth': 7, 'min_samples_split': 70}
+0.467 (+/-0.026) for {'max_depth': 7, 'min_samples_split': 90}
+0.469 (+/-0.023) for {'max_depth': 7, 'min_samples_split': 110}
+0.471 (+/-0.018) for {'max_depth': 7, 'min_samples_split': 130}
+0.470 (+/-0.019) for {'max_depth': 7, 'min_samples_split': 150}
+0.470 (+/-0.020) for {'max_depth': 7, 'min_samples_split': 170}
+0.473 (+/-0.017) for {'max_depth': 7, 'min_samples_split': 190}
+0.473 (+/-0.016) for {'max_depth': 7, 'min_samples_split': 210}
+0.474 (+/-0.015) for {'max_depth': 7, 'min_samples_split': 230}
+0.474 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 250}
+0.475 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 270}
+0.473 (+/-0.020) for {'max_depth': 7, 'min_samples_split': 290}
+0.470 (+/-0.020) for {'max_depth': 7, 'min_samples_split': 310}
+0.468 (+/-0.011) for {'max_depth': 7, 'min_samples_split': 330}
+0.469 (+/-0.014) for {'max_depth': 7, 'min_samples_split': 350}
+0.467 (+/-0.015) for {'max_depth': 7, 'min_samples_split': 370}
+0.470 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 390}
+0.471 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 410}
+0.468 (+/-0.022) for {'max_depth': 7, 'min_samples_split': 430}
+0.462 (+/-0.016) for {'max_depth': 7, 'min_samples_split': 450}
+0.463 (+/-0.011) for {'max_depth': 7, 'min_samples_split': 470}
+0.463 (+/-0.011) for {'max_depth': 7, 'min_samples_split': 490}
+0.462 (+/-0.019) for {'max_depth': 9, 'min_samples_split': 10}
+0.465 (+/-0.029) for {'max_depth': 9, 'min_samples_split': 30}
+0.472 (+/-0.025) for {'max_depth': 9, 'min_samples_split': 50}
+0.470 (+/-0.022) for {'max_depth': 9, 'min_samples_split': 70}
+0.469 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 90}
+0.471 (+/-0.018) for {'max_depth': 9, 'min_samples_split': 110}
+0.471 (+/-0.015) for {'max_depth': 9, 'min_samples_split': 130}
+0.468 (+/-0.013) for {'max_depth': 9, 'min_samples_split': 150}
+0.468 (+/-0.015) for {'max_depth': 9, 'min_samples_split': 170}
+0.471 (+/-0.020) for {'max_depth': 9, 'min_samples_split': 190}
+0.472 (+/-0.016) for {'max_depth': 9, 'min_samples_split': 210}
+0.473 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 230}
+0.473 (+/-0.022) for {'max_depth': 9, 'min_samples_split': 250}
+0.475 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 270}
+0.472 (+/-0.020) for {'max_depth': 9, 'min_samples_split': 290}
+0.472 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 310}
+0.471 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 330}
+0.471 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 350}
+0.469 (+/-0.018) for {'max_depth': 9, 'min_samples_split': 370}
+0.469 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 390}
+0.470 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 410}
+0.467 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 430}
+0.462 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 450}
+0.462 (+/-0.010) for {'max_depth': 9, 'min_samples_split': 470}
+0.463 (+/-0.010) for {'max_depth': 9, 'min_samples_split': 490}
+0.454 (+/-0.026) for {'max_depth': 11, 'min_samples_split': 10}
+0.458 (+/-0.026) for {'max_depth': 11, 'min_samples_split': 30}
+0.463 (+/-0.021) for {'max_depth': 11, 'min_samples_split': 50}
+0.463 (+/-0.017) for {'max_depth': 11, 'min_samples_split': 70}
+0.464 (+/-0.013) for {'max_depth': 11, 'min_samples_split': 90}
+0.469 (+/-0.015) for {'max_depth': 11, 'min_samples_split': 110}
+0.470 (+/-0.011) for {'max_depth': 11, 'min_samples_split': 130}
+0.466 (+/-0.011) for {'max_depth': 11, 'min_samples_split': 150}
+0.466 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 170}
+0.470 (+/-0.021) for {'max_depth': 11, 'min_samples_split': 190}
+0.471 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 210}
+0.472 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 230}
+0.473 (+/-0.021) for {'max_depth': 11, 'min_samples_split': 250}
+0.475 (+/-0.022) for {'max_depth': 11, 'min_samples_split': 270}
+0.472 (+/-0.019) for {'max_depth': 11, 'min_samples_split': 290}
+0.471 (+/-0.022) for {'max_depth': 11, 'min_samples_split': 310}
+0.469 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 350}
+0.467 (+/-0.017) for {'max_depth': 11, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 11, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 11, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 11, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 11, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 11, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 11, 'min_samples_split': 490}
+0.455 (+/-0.018) for {'max_depth': 13, 'min_samples_split': 10}
+0.458 (+/-0.022) for {'max_depth': 13, 'min_samples_split': 30}
+0.460 (+/-0.021) for {'max_depth': 13, 'min_samples_split': 50}
+0.461 (+/-0.018) for {'max_depth': 13, 'min_samples_split': 70}
+0.461 (+/-0.012) for {'max_depth': 13, 'min_samples_split': 90}
+0.469 (+/-0.014) for {'max_depth': 13, 'min_samples_split': 110}
+0.470 (+/-0.011) for {'max_depth': 13, 'min_samples_split': 130}
+0.466 (+/-0.013) for {'max_depth': 13, 'min_samples_split': 150}
+0.466 (+/-0.016) for {'max_depth': 13, 'min_samples_split': 170}
+0.470 (+/-0.019) for {'max_depth': 13, 'min_samples_split': 190}
+0.471 (+/-0.014) for {'max_depth': 13, 'min_samples_split': 210}
+0.473 (+/-0.012) for {'max_depth': 13, 'min_samples_split': 230}
+0.474 (+/-0.017) for {'max_depth': 13, 'min_samples_split': 250}
+0.476 (+/-0.018) for {'max_depth': 13, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 13, 'min_samples_split': 310}
+0.470 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 13, 'min_samples_split': 350}
+0.468 (+/-0.017) for {'max_depth': 13, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 13, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 13, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 13, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 13, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 13, 'min_samples_split': 490}
+0.444 (+/-0.026) for {'max_depth': 15, 'min_samples_split': 10}
+0.447 (+/-0.024) for {'max_depth': 15, 'min_samples_split': 30}
+0.452 (+/-0.026) for {'max_depth': 15, 'min_samples_split': 50}
+0.452 (+/-0.016) for {'max_depth': 15, 'min_samples_split': 70}
+0.454 (+/-0.012) for {'max_depth': 15, 'min_samples_split': 90}
+0.464 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 110}
+0.468 (+/-0.011) for {'max_depth': 15, 'min_samples_split': 130}
+0.464 (+/-0.012) for {'max_depth': 15, 'min_samples_split': 150}
+0.465 (+/-0.017) for {'max_depth': 15, 'min_samples_split': 170}
+0.469 (+/-0.019) for {'max_depth': 15, 'min_samples_split': 190}
+0.471 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 210}
+0.473 (+/-0.012) for {'max_depth': 15, 'min_samples_split': 230}
+0.474 (+/-0.018) for {'max_depth': 15, 'min_samples_split': 250}
+0.476 (+/-0.018) for {'max_depth': 15, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 15, 'min_samples_split': 310}
+0.470 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 15, 'min_samples_split': 350}
+0.467 (+/-0.017) for {'max_depth': 15, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 15, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 15, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 15, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 15, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 15, 'min_samples_split': 490}
+0.441 (+/-0.020) for {'max_depth': 17, 'min_samples_split': 10}
+0.442 (+/-0.023) for {'max_depth': 17, 'min_samples_split': 30}
+0.449 (+/-0.022) for {'max_depth': 17, 'min_samples_split': 50}
+0.452 (+/-0.018) for {'max_depth': 17, 'min_samples_split': 70}
+0.456 (+/-0.016) for {'max_depth': 17, 'min_samples_split': 90}
+0.464 (+/-0.014) for {'max_depth': 17, 'min_samples_split': 110}
+0.468 (+/-0.011) for {'max_depth': 17, 'min_samples_split': 130}
+0.464 (+/-0.011) for {'max_depth': 17, 'min_samples_split': 150}
+0.466 (+/-0.017) for {'max_depth': 17, 'min_samples_split': 170}
+0.470 (+/-0.019) for {'max_depth': 17, 'min_samples_split': 190}
+0.471 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 210}
+0.473 (+/-0.013) for {'max_depth': 17, 'min_samples_split': 230}
+0.474 (+/-0.018) for {'max_depth': 17, 'min_samples_split': 250}
+0.476 (+/-0.018) for {'max_depth': 17, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 17, 'min_samples_split': 310}
+0.470 (+/-0.016) for {'max_depth': 17, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 17, 'min_samples_split': 350}
+0.468 (+/-0.017) for {'max_depth': 17, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 17, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 17, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 17, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 17, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 17, 'min_samples_split': 490}
+0.438 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 10}
+0.444 (+/-0.021) for {'max_depth': 19, 'min_samples_split': 30}
+0.449 (+/-0.026) for {'max_depth': 19, 'min_samples_split': 50}
+0.450 (+/-0.018) for {'max_depth': 19, 'min_samples_split': 70}
+0.456 (+/-0.016) for {'max_depth': 19, 'min_samples_split': 90}
+0.463 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 110}
+0.467 (+/-0.011) for {'max_depth': 19, 'min_samples_split': 130}
+0.464 (+/-0.011) for {'max_depth': 19, 'min_samples_split': 150}
+0.466 (+/-0.017) for {'max_depth': 19, 'min_samples_split': 170}
+0.470 (+/-0.019) for {'max_depth': 19, 'min_samples_split': 190}
+0.471 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 210}
+0.474 (+/-0.013) for {'max_depth': 19, 'min_samples_split': 230}
+0.474 (+/-0.018) for {'max_depth': 19, 'min_samples_split': 250}
+0.476 (+/-0.019) for {'max_depth': 19, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 19, 'min_samples_split': 310}
+0.470 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 19, 'min_samples_split': 350}
+0.468 (+/-0.017) for {'max_depth': 19, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 19, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 19, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 19, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 19, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 19, 'min_samples_split': 490}
+
+Detailed classification report:
+
+              precision    recall  f1-score   support
+
+           0       0.29      0.10      0.14       989
+           1       0.43      0.36      0.39      2002
+           2       0.57      0.75      0.65      3009
+
+    accuracy                           0.51      6000
+   macro avg       0.43      0.40      0.39      6000
+weighted avg       0.48      0.51      0.48      6000
+
+optimizing svm
+Start of Optimzations: 
+Best parameters set found on development set:  {'C': 1000, 'gamma': 0.0001, 'kernel': 'rbf'}
+Grid scores on development set:
+
+0.453 (+/-0.006) for {'C': 1, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.459 (+/-0.010) for {'C': 1, 'gamma': 0.001, 'kernel': 'rbf'}
+0.467 (+/-0.005) for {'C': 1, 'gamma': 0.01, 'kernel': 'rbf'}
+0.389 (+/-0.009) for {'C': 1, 'gamma': 0.1, 'kernel': 'rbf'}
+0.454 (+/-0.014) for {'C': 10, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.478 (+/-0.006) for {'C': 10, 'gamma': 0.001, 'kernel': 'rbf'}
+0.480 (+/-0.002) for {'C': 10, 'gamma': 0.01, 'kernel': 'rbf'}
+0.418 (+/-0.014) for {'C': 10, 'gamma': 0.1, 'kernel': 'rbf'}
+0.482 (+/-0.002) for {'C': 100, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.480 (+/-0.009) for {'C': 100, 'gamma': 0.001, 'kernel': 'rbf'}
+0.477 (+/-0.002) for {'C': 100, 'gamma': 0.01, 'kernel': 'rbf'}
+0.418 (+/-0.014) for {'C': 100, 'gamma': 0.1, 'kernel': 'rbf'}
+0.487 (+/-0.000) for {'C': 1000, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.469 (+/-0.003) for {'C': 1000, 'gamma': 0.001, 'kernel': 'rbf'}
+0.477 (+/-0.002) for {'C': 1000, 'gamma': 0.01, 'kernel': 'rbf'}
+0.418 (+/-0.014) for {'C': 1000, 'gamma': 0.1, 'kernel': 'rbf'}
+
+Detailed classification report:
+
+              precision    recall  f1-score   support
+
+           0       0.35      0.29      0.31       989
+           1       0.44      0.36      0.39      2002
+           2       0.59      0.70      0.64      3009
+
+    accuracy                           0.52      6000
+   macro avg       0.46      0.45      0.45      6000
+weighted avg       0.50      0.52      0.51      6000
+
+using:  data/all_avg_tweet_embeddings_with_stopwords_with_emoji_freq.json
+optimizing decision list
+Best parameters set found on development set:  {'max_depth': 17, 'min_samples_split': 270}
+Grid scores on development set:
+
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 10}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 30}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 50}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 70}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 90}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 110}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 130}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 150}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 170}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 190}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 210}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 230}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 250}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 270}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 290}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 310}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 330}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 350}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 370}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 390}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 410}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 430}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 450}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 470}
+0.450 (+/-0.015) for {'max_depth': 1, 'min_samples_split': 490}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 10}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 30}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 50}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 70}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 90}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 110}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 130}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 150}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 170}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 190}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 210}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 230}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 250}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 270}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 290}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 310}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 330}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 350}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 370}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 390}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 410}
+0.451 (+/-0.014) for {'max_depth': 3, 'min_samples_split': 430}
+0.450 (+/-0.013) for {'max_depth': 3, 'min_samples_split': 450}
+0.450 (+/-0.013) for {'max_depth': 3, 'min_samples_split': 470}
+0.450 (+/-0.013) for {'max_depth': 3, 'min_samples_split': 490}
+0.466 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 10}
+0.464 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 30}
+0.465 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 50}
+0.465 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 70}
+0.464 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 90}
+0.465 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 110}
+0.465 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 130}
+0.464 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 150}
+0.465 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 170}
+0.465 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 190}
+0.464 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 210}
+0.463 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 230}
+0.462 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 250}
+0.463 (+/-0.030) for {'max_depth': 5, 'min_samples_split': 270}
+0.463 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 290}
+0.462 (+/-0.027) for {'max_depth': 5, 'min_samples_split': 310}
+0.462 (+/-0.026) for {'max_depth': 5, 'min_samples_split': 330}
+0.463 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 350}
+0.461 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 370}
+0.461 (+/-0.028) for {'max_depth': 5, 'min_samples_split': 390}
+0.461 (+/-0.029) for {'max_depth': 5, 'min_samples_split': 410}
+0.456 (+/-0.032) for {'max_depth': 5, 'min_samples_split': 430}
+0.451 (+/-0.022) for {'max_depth': 5, 'min_samples_split': 450}
+0.449 (+/-0.017) for {'max_depth': 5, 'min_samples_split': 470}
+0.449 (+/-0.017) for {'max_depth': 5, 'min_samples_split': 490}
+0.469 (+/-0.022) for {'max_depth': 7, 'min_samples_split': 10}
+0.472 (+/-0.022) for {'max_depth': 7, 'min_samples_split': 30}
+0.471 (+/-0.028) for {'max_depth': 7, 'min_samples_split': 50}
+0.468 (+/-0.030) for {'max_depth': 7, 'min_samples_split': 70}
+0.467 (+/-0.026) for {'max_depth': 7, 'min_samples_split': 90}
+0.469 (+/-0.023) for {'max_depth': 7, 'min_samples_split': 110}
+0.470 (+/-0.018) for {'max_depth': 7, 'min_samples_split': 130}
+0.470 (+/-0.019) for {'max_depth': 7, 'min_samples_split': 150}
+0.471 (+/-0.020) for {'max_depth': 7, 'min_samples_split': 170}
+0.473 (+/-0.017) for {'max_depth': 7, 'min_samples_split': 190}
+0.473 (+/-0.016) for {'max_depth': 7, 'min_samples_split': 210}
+0.474 (+/-0.015) for {'max_depth': 7, 'min_samples_split': 230}
+0.474 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 250}
+0.475 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 270}
+0.473 (+/-0.020) for {'max_depth': 7, 'min_samples_split': 290}
+0.470 (+/-0.020) for {'max_depth': 7, 'min_samples_split': 310}
+0.468 (+/-0.011) for {'max_depth': 7, 'min_samples_split': 330}
+0.469 (+/-0.013) for {'max_depth': 7, 'min_samples_split': 350}
+0.467 (+/-0.015) for {'max_depth': 7, 'min_samples_split': 370}
+0.470 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 390}
+0.471 (+/-0.021) for {'max_depth': 7, 'min_samples_split': 410}
+0.468 (+/-0.022) for {'max_depth': 7, 'min_samples_split': 430}
+0.462 (+/-0.016) for {'max_depth': 7, 'min_samples_split': 450}
+0.463 (+/-0.011) for {'max_depth': 7, 'min_samples_split': 470}
+0.463 (+/-0.011) for {'max_depth': 7, 'min_samples_split': 490}
+0.461 (+/-0.020) for {'max_depth': 9, 'min_samples_split': 10}
+0.466 (+/-0.026) for {'max_depth': 9, 'min_samples_split': 30}
+0.472 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 50}
+0.471 (+/-0.022) for {'max_depth': 9, 'min_samples_split': 70}
+0.469 (+/-0.016) for {'max_depth': 9, 'min_samples_split': 90}
+0.470 (+/-0.018) for {'max_depth': 9, 'min_samples_split': 110}
+0.470 (+/-0.015) for {'max_depth': 9, 'min_samples_split': 130}
+0.468 (+/-0.013) for {'max_depth': 9, 'min_samples_split': 150}
+0.468 (+/-0.015) for {'max_depth': 9, 'min_samples_split': 170}
+0.471 (+/-0.020) for {'max_depth': 9, 'min_samples_split': 190}
+0.472 (+/-0.016) for {'max_depth': 9, 'min_samples_split': 210}
+0.473 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 230}
+0.473 (+/-0.022) for {'max_depth': 9, 'min_samples_split': 250}
+0.475 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 270}
+0.473 (+/-0.020) for {'max_depth': 9, 'min_samples_split': 290}
+0.472 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 310}
+0.471 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 330}
+0.471 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 350}
+0.469 (+/-0.018) for {'max_depth': 9, 'min_samples_split': 370}
+0.469 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 390}
+0.470 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 410}
+0.467 (+/-0.023) for {'max_depth': 9, 'min_samples_split': 430}
+0.462 (+/-0.017) for {'max_depth': 9, 'min_samples_split': 450}
+0.462 (+/-0.010) for {'max_depth': 9, 'min_samples_split': 470}
+0.463 (+/-0.010) for {'max_depth': 9, 'min_samples_split': 490}
+0.455 (+/-0.028) for {'max_depth': 11, 'min_samples_split': 10}
+0.457 (+/-0.027) for {'max_depth': 11, 'min_samples_split': 30}
+0.463 (+/-0.021) for {'max_depth': 11, 'min_samples_split': 50}
+0.463 (+/-0.015) for {'max_depth': 11, 'min_samples_split': 70}
+0.464 (+/-0.014) for {'max_depth': 11, 'min_samples_split': 90}
+0.469 (+/-0.014) for {'max_depth': 11, 'min_samples_split': 110}
+0.470 (+/-0.012) for {'max_depth': 11, 'min_samples_split': 130}
+0.467 (+/-0.012) for {'max_depth': 11, 'min_samples_split': 150}
+0.466 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 170}
+0.470 (+/-0.021) for {'max_depth': 11, 'min_samples_split': 190}
+0.471 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 210}
+0.472 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 230}
+0.473 (+/-0.020) for {'max_depth': 11, 'min_samples_split': 250}
+0.475 (+/-0.022) for {'max_depth': 11, 'min_samples_split': 270}
+0.472 (+/-0.019) for {'max_depth': 11, 'min_samples_split': 290}
+0.471 (+/-0.023) for {'max_depth': 11, 'min_samples_split': 310}
+0.469 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 11, 'min_samples_split': 350}
+0.467 (+/-0.017) for {'max_depth': 11, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 11, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 11, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 11, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 11, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 11, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 11, 'min_samples_split': 490}
+0.450 (+/-0.030) for {'max_depth': 13, 'min_samples_split': 10}
+0.457 (+/-0.024) for {'max_depth': 13, 'min_samples_split': 30}
+0.461 (+/-0.023) for {'max_depth': 13, 'min_samples_split': 50}
+0.461 (+/-0.018) for {'max_depth': 13, 'min_samples_split': 70}
+0.462 (+/-0.013) for {'max_depth': 13, 'min_samples_split': 90}
+0.469 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 110}
+0.470 (+/-0.012) for {'max_depth': 13, 'min_samples_split': 130}
+0.466 (+/-0.013) for {'max_depth': 13, 'min_samples_split': 150}
+0.466 (+/-0.016) for {'max_depth': 13, 'min_samples_split': 170}
+0.470 (+/-0.019) for {'max_depth': 13, 'min_samples_split': 190}
+0.471 (+/-0.014) for {'max_depth': 13, 'min_samples_split': 210}
+0.473 (+/-0.012) for {'max_depth': 13, 'min_samples_split': 230}
+0.474 (+/-0.017) for {'max_depth': 13, 'min_samples_split': 250}
+0.476 (+/-0.018) for {'max_depth': 13, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 13, 'min_samples_split': 310}
+0.470 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 13, 'min_samples_split': 350}
+0.468 (+/-0.017) for {'max_depth': 13, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 13, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 13, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 13, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 13, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 13, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 13, 'min_samples_split': 490}
+0.444 (+/-0.021) for {'max_depth': 15, 'min_samples_split': 10}
+0.446 (+/-0.022) for {'max_depth': 15, 'min_samples_split': 30}
+0.451 (+/-0.027) for {'max_depth': 15, 'min_samples_split': 50}
+0.453 (+/-0.018) for {'max_depth': 15, 'min_samples_split': 70}
+0.455 (+/-0.014) for {'max_depth': 15, 'min_samples_split': 90}
+0.464 (+/-0.013) for {'max_depth': 15, 'min_samples_split': 110}
+0.467 (+/-0.011) for {'max_depth': 15, 'min_samples_split': 130}
+0.465 (+/-0.011) for {'max_depth': 15, 'min_samples_split': 150}
+0.465 (+/-0.016) for {'max_depth': 15, 'min_samples_split': 170}
+0.469 (+/-0.019) for {'max_depth': 15, 'min_samples_split': 190}
+0.471 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 210}
+0.473 (+/-0.013) for {'max_depth': 15, 'min_samples_split': 230}
+0.474 (+/-0.018) for {'max_depth': 15, 'min_samples_split': 250}
+0.476 (+/-0.018) for {'max_depth': 15, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 15, 'min_samples_split': 310}
+0.470 (+/-0.016) for {'max_depth': 15, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 15, 'min_samples_split': 350}
+0.467 (+/-0.017) for {'max_depth': 15, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 15, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 15, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 15, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 15, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 15, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 15, 'min_samples_split': 490}
+0.442 (+/-0.026) for {'max_depth': 17, 'min_samples_split': 10}
+0.444 (+/-0.021) for {'max_depth': 17, 'min_samples_split': 30}
+0.447 (+/-0.027) for {'max_depth': 17, 'min_samples_split': 50}
+0.451 (+/-0.017) for {'max_depth': 17, 'min_samples_split': 70}
+0.457 (+/-0.017) for {'max_depth': 17, 'min_samples_split': 90}
+0.463 (+/-0.013) for {'max_depth': 17, 'min_samples_split': 110}
+0.468 (+/-0.011) for {'max_depth': 17, 'min_samples_split': 130}
+0.464 (+/-0.012) for {'max_depth': 17, 'min_samples_split': 150}
+0.466 (+/-0.017) for {'max_depth': 17, 'min_samples_split': 170}
+0.469 (+/-0.020) for {'max_depth': 17, 'min_samples_split': 190}
+0.471 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 210}
+0.473 (+/-0.012) for {'max_depth': 17, 'min_samples_split': 230}
+0.474 (+/-0.018) for {'max_depth': 17, 'min_samples_split': 250}
+0.476 (+/-0.019) for {'max_depth': 17, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 17, 'min_samples_split': 310}
+0.470 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 17, 'min_samples_split': 350}
+0.467 (+/-0.017) for {'max_depth': 17, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 17, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 17, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 17, 'min_samples_split': 430}
+0.460 (+/-0.015) for {'max_depth': 17, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 17, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 17, 'min_samples_split': 490}
+0.440 (+/-0.026) for {'max_depth': 19, 'min_samples_split': 10}
+0.443 (+/-0.021) for {'max_depth': 19, 'min_samples_split': 30}
+0.447 (+/-0.026) for {'max_depth': 19, 'min_samples_split': 50}
+0.449 (+/-0.016) for {'max_depth': 19, 'min_samples_split': 70}
+0.455 (+/-0.014) for {'max_depth': 19, 'min_samples_split': 90}
+0.464 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 110}
+0.467 (+/-0.012) for {'max_depth': 19, 'min_samples_split': 130}
+0.464 (+/-0.012) for {'max_depth': 19, 'min_samples_split': 150}
+0.466 (+/-0.017) for {'max_depth': 19, 'min_samples_split': 170}
+0.469 (+/-0.019) for {'max_depth': 19, 'min_samples_split': 190}
+0.471 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 210}
+0.473 (+/-0.013) for {'max_depth': 19, 'min_samples_split': 230}
+0.474 (+/-0.018) for {'max_depth': 19, 'min_samples_split': 250}
+0.476 (+/-0.018) for {'max_depth': 19, 'min_samples_split': 270}
+0.473 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 290}
+0.472 (+/-0.022) for {'max_depth': 19, 'min_samples_split': 310}
+0.470 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 330}
+0.470 (+/-0.016) for {'max_depth': 19, 'min_samples_split': 350}
+0.468 (+/-0.017) for {'max_depth': 19, 'min_samples_split': 370}
+0.468 (+/-0.023) for {'max_depth': 19, 'min_samples_split': 390}
+0.469 (+/-0.022) for {'max_depth': 19, 'min_samples_split': 410}
+0.466 (+/-0.023) for {'max_depth': 19, 'min_samples_split': 430}
+0.461 (+/-0.015) for {'max_depth': 19, 'min_samples_split': 450}
+0.461 (+/-0.009) for {'max_depth': 19, 'min_samples_split': 470}
+0.462 (+/-0.011) for {'max_depth': 19, 'min_samples_split': 490}
+
+Detailed classification report:
+
+              precision    recall  f1-score   support
+
+           0       0.29      0.10      0.14       989
+           1       0.43      0.36      0.39      2002
+           2       0.57      0.75      0.65      3009
+
+    accuracy                           0.51      6000
+   macro avg       0.43      0.40      0.39      6000
+weighted avg       0.48      0.51      0.48      6000
+
+optimizing svm
+Start of Optimzations: 
+Best parameters set found on development set:  {'C': 1000, 'gamma': 0.0001, 'kernel': 'rbf'}
+Grid scores on development set:
+
+0.453 (+/-0.006) for {'C': 1, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.459 (+/-0.010) for {'C': 1, 'gamma': 0.001, 'kernel': 'rbf'}
+0.467 (+/-0.005) for {'C': 1, 'gamma': 0.01, 'kernel': 'rbf'}
+0.389 (+/-0.009) for {'C': 1, 'gamma': 0.1, 'kernel': 'rbf'}
+0.454 (+/-0.014) for {'C': 10, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.478 (+/-0.006) for {'C': 10, 'gamma': 0.001, 'kernel': 'rbf'}
+0.480 (+/-0.002) for {'C': 10, 'gamma': 0.01, 'kernel': 'rbf'}
+0.418 (+/-0.014) for {'C': 10, 'gamma': 0.1, 'kernel': 'rbf'}
+0.482 (+/-0.002) for {'C': 100, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.480 (+/-0.009) for {'C': 100, 'gamma': 0.001, 'kernel': 'rbf'}
+0.477 (+/-0.002) for {'C': 100, 'gamma': 0.01, 'kernel': 'rbf'}
+0.418 (+/-0.014) for {'C': 100, 'gamma': 0.1, 'kernel': 'rbf'}
+0.487 (+/-0.000) for {'C': 1000, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.469 (+/-0.003) for {'C': 1000, 'gamma': 0.001, 'kernel': 'rbf'}
+0.477 (+/-0.002) for {'C': 1000, 'gamma': 0.01, 'kernel': 'rbf'}
+0.418 (+/-0.014) for {'C': 1000, 'gamma': 0.1, 'kernel': 'rbf'}
+
+Detailed classification report:
+
+              precision    recall  f1-score   support
+
+           0       0.35      0.29      0.31       989
+           1       0.44      0.36      0.39      2002
+           2       0.59      0.70      0.64      3009
+
+    accuracy                           0.52      6000
+   macro avg       0.46      0.45      0.45      6000
+weighted avg       0.50      0.52      0.51      6000
+
