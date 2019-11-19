@@ -13,12 +13,17 @@ This project assumes that a 'positive' sentiment gets assigned a numeric value o
 
 ## Installation of Dependencies
 If you don't have pipenv you can download it [here](https://github.com/pypa/pipenv).  In the root directory of this project run `pipenv install --skip-lock`, this will install all of the dependencies that the project needs and will create the virtual environment.  
-
-#### Downloading the model
+#### Downloading the models
 ##### The script way
 Run this command in the root of the directory and it will download the model and extract it correctly.
 ```bash
 wget -qO- https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip | bsdtar -xvf-
+```
+
+To install the Spacy models run 
+```bash
+pipenv run python -m spacy download en_core_web_sm
+pipenv run python -m spacy download es_core_news_sm
 ```
 ###### Long way
 Once we have this the bert model that we want to use needs to be downloaded and extracted into a directory.  Since we're working on a mix of languages we're going to use the bert mixed model which can be downloaded [here](https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip).  To make things easier, I'd recommend moving that downloaded zip to the root of the project directory and unzipping it there.  This will unzip into a folder named `multi_cased_L-12_H-768_A-12/` which contains all the files for the pretrained model.
