@@ -4,6 +4,7 @@ import emoji
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
+import numpy as np
 
 from progress.bar import ChargingBar
 
@@ -43,6 +44,39 @@ def calculate_emoji_sentiments(x, y):
       bar.next()
    bar.finish()
    return emoji_sentiments
+
+
+def get_all_emojis_used(data):
+   allEmojisInData = {}
+   bar = ChargingBar('Finding all emojis used in data\t\t', max=len(data))
+   for instace in data:
+      tweet = instace['tweet']
+      emojis = extract_emojis(tweet)
+
+      for emoji in emojis:
+         if emoji not in allEmojisInData:
+            allEmojisInData[emoji] = 0
+      bar.next()
+
+   bar.finish()
+   return allEmojisInData
+
+
+def get_emojis_of_tweet(tweet, allEmojisInData):
+   # print('allEmojisInData: ', allEmojisInData)
+   emojis = extract_emojis(tweet)
+
+   for emoji in emojis: #  TODO does this cahnge all emojis in data?
+      allEmojisInData[emoji] += 1
+
+   emojiFeatureList = []
+   for emoji in allEmojisInData:
+      emojiFeatureList.append(allEmojisInData[emoji])
+
+   # print('emojiFeatureList: ', emojiFeatureList)
+   result = np.array(emojiFeatureList)
+   result =result.reshape((1, len(result)))
+   return np.array(emojiFeatureList)
 
 
 # Alwin, Zephyr Uses the emoji maps produced by the above method to calculate accuracy of the map

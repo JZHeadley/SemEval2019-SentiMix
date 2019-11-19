@@ -1,6 +1,7 @@
 from bert_serving.client import BertClient
 from progress.bar import ChargingBar
 from sklearn.model_selection import train_test_split
+from metrics import metrics
 
 import numpy as np
 
@@ -53,53 +54,119 @@ def get_word_embeddings(data):
     return embeddings,sentiment_embeddings
 
 
-# checks if using bert for the whole tweet gives a different result than averaging each word embedding
-# TODO if you get a different embedding, make a json file of the averaged word embedding
 # TODO try a different combo method other than averaging
 # ALWIN - an other version of bert, per word and not per tweet
-def compare_word_embeddings(data): 
-    data = data[:1]
+def average_word_embeddings(data): 
     bc = BertClient()
-
-    embeddings = []
-    sentiment_embeddings = []
-    # word embedding average embedding 
-    bar = ChargingBar('Calculating tweet embeddings\t\t\t', max=len(data))
-    for instance in data:
-        if len(instance['tokens']) == 0:
-            embedding = bc.encode([instance['tweet']])
-        else: 
-            embedding = bc.encode([' '.join(instance['tokens'])])
-
-        print("tweet embedding: " + embedding)
-        bar.next()
-    bar.finish()
-
-    # whole tweet embedding
+    tweet_embeddings = []
     bar = ChargingBar('Calculating word average embeddings\t\t\t', max=len(data))
     for instance in data:
         if len(instance['tokens']) == 0:
             embedding = bc.encode([instance['tweet']])
         else:
-            tweet_embedding = []
             word_embeddings = []
             for word in instance['tokens']:
-                word_embeddings.append(bc.encode(word))
+                wordList = [word]
+                word_embeddings.append(bc.encode(wordList))
 
             # for each feature in the embedding, calucalute the avg of said feature for each word
             # all word embeddings should be the same size because thats how embeddings work
             # TODO add a check, probably
-            for feature in range(len(word_embeddings)):
-                featureAvg = 0
-                for word_embedding in word_embeddings:
-                    featureAvg += word_embedding[feature]
-                featureAvg /= len(word_embeddings)
-                tweet_embedding.append(featureAvg)
+            word_embedding_sum = [0] * len(word_embeddings[0]) # TODO add a check to make sure this first elem exists
+            for word_embedding in word_embeddings: 
+                for i in range(len(word_embedding)):
+                    word_embedding_sum[i] += word_embedding[i]
+            embedding = [feature / len(word_embeddings) for feature in word_embedding_sum] # compute the average of each feature of the word embedding
+            tweet_embeddings.append({
+                "embedding": embedding[0], # TODO is the [0] needed?
+                "sentiment": instance['sentiment']
+            })
                 
-        print("word average embedding: " + tweet_embedding)
         bar.next()
     bar.finish()
-    return 
+    print("word average embedding: " + str(tweet_embeddings[0]))
+    return tweet_embeddings
+
+
+def get_word_embeddings_append_emojis(data, emojisInData):
+    bc = BertClient()
+    # bc.encode(['First do it', 'then do it right', 'then do it better'])
+
+    embeddings = []
+    sentiment_embeddings = []
+    bar = ChargingBar('Calculating tweet embeddings with emojis\t\t\t', max=len(data))
+    for instance in data:
+        # should encode the join of the tokens array instead
+        # kinda a hacky fix to an empty tokens array
+        if len(instance['tokens']) == 0:
+            embedding = bc.encode([instance['tweet']])
+        else: 
+            embedding = bc.encode([' '.join(instance['tokens'])])
+        
+        embedding = embedding.reshape(768) # The hidden bert layer has 768 neurons (hence 768 features)
+        # gets the freq of each emoji in a given tweet, returned in a list. This list has the same number of emojis and order of them for each tweet
+        emojiFreqList = metrics.get_emojis_of_tweet(instance['tweet'], emojisInData)
+        # print("here embedding: ", type(embedding), embedding.shape, embedding)
+        # print("here emojiFreqList: ", type(emojiFreqList), emojiFreqList.shape, emojiFreqList)
+        combinedEmbedding = np.concatenate((embedding, emojiFreqList))
+        combinedEmbedding = combinedEmbedding.reshape(1, -1)
+        # print("combined embedding: ", type(combinedEmbedding), combinedEmbedding.shape, combinedEmbedding)
+
+        embeddings.append(combinedEmbedding)
+        sentiment_embeddings.append({
+            "embedding": combinedEmbedding[0],
+            "sentiment": instance['sentiment']
+        })
+        bar.next()
+
+    bar.finish()
+    # print(embeddings)
+    # print(len(embeddings), len(embeddings[0]),len(embeddings[0][0]))
+    return embeddings,sentiment_embeddings
+
+
+# TODO try a different combo method other than averaging
+# ALWIN - an other version of bert, per word and not per tweet
+def average_word_embeddings_append_emojis(data, emojisInData): 
+    bc = BertClient()
+    tweet_embeddings = []
+    bar = ChargingBar('Calculating word average embeddings with emojis\t\t\t', max=len(data))
+    for instance in data:
+        if len(instance['tokens']) == 0:
+            embedding = bc.encode([instance['tweet']])
+        else:
+            word_embeddings = []
+            for word in instance['tokens']:
+                wordList = [word]
+                word_embeddings.append(bc.encode(wordList))
+
+            # for each feature in the embedding, calucalute the avg of said feature for each word
+            # all word embeddings should be the same size because thats how embeddings work
+            # TODO add a check, probably
+            word_embedding_sum = [0] * len(word_embeddings[0]) # TODO add a check to make sure this first elem exists
+            for word_embedding in word_embeddings: 
+                for i in range(len(word_embedding)):
+                    word_embedding_sum[i] += word_embedding[i]
+            embedding = [feature / len(word_embeddings) for feature in word_embedding_sum] # compute the average of each feature of the word embedding
+            embedding = np.array(embedding)
+            embedding = embedding.reshape(768) # The hidden bert layer has 768 neurons (hence 768 features)
+            
+            # gets the freq of each emoji in a given tweet, returned in a list. This list has the same number of emojis and order of them for each tweet
+            emojiFreqList = metrics.get_emojis_of_tweet(instance['tweet'], emojisInData)
+            combinedEmbedding = np.concatenate((embedding, emojiFreqList))
+            combinedEmbedding = combinedEmbedding.reshape(1, -1)
+            # print("combined embedding: ", type(combinedEmbedding), combinedEmbedding.shape, combinedEmbedding)
+
+            tweet_embeddings.append({
+                "embedding": combinedEmbedding[0],
+                "sentiment": instance['sentiment']
+            })
+                
+        bar.next()
+    bar.finish()
+    print("word average embedding: " + str(tweet_embeddings[0]))
+    return tweet_embeddings
+
 
 # ALWIN - converts a list to numpy
 def convert_to_numpy(data):

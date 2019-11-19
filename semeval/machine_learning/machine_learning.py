@@ -115,10 +115,11 @@ def supportVectorClassification(x_train, x_test, y_train, y_test):
     predictions = svc.predict(x_test)
     return predictions
 
+
 # KARUN - optimizes Decision Tree Classifier model using the data
 def dtcOptimizer(x_train,y_train,x_test,y_test):
     tuned_parameters={'min_samples_split' : range(10,500,20),'max_depth': range(1,20,2)}
-    clf = GridSearchCV(decisionTreeClassifier(), tuned_parameters, cv=5, scoring='f1_weighted')
+    clf = GridSearchCV(DecisionTreeClassifier(), tuned_parameters, cv=5, scoring='f1_weighted')
     clf.fit(x_train, y_train)
     print("Best parameters set found on development set: ", clf.best_params_)
     print("Grid scores on development set:\n")
@@ -130,6 +131,8 @@ def dtcOptimizer(x_train,y_train,x_test,y_test):
     y_true, y_pred = y_test, clf.predict(x_test)
     print(classification_report(y_true, y_pred))
     return clf.best_params_
+
+
 # KARUN - optimizes logistic regression model using the data
 def logregOptimizer(x_train,y_train,x_test,y_test):
     # Create hyperparameter options
@@ -149,10 +152,11 @@ def logregOptimizer(x_train,y_train,x_test,y_test):
     print(classification_report(y_true, y_pred))
     return clf.best_params_
 
+
 #KARUN - optimizes knn model using the data
 def knnOptimizer(x_train,y_train,x_test,y_test):
     tuned_parameters = {'n_neighbors': list(range(10, 21))}
-    clf = GridSearchCV(knn, tuned_parameters, cv=5, scoring='f1_weighted')
+    clf = GridSearchCV(KNeighborsClassifier(), tuned_parameters, cv=5, scoring='f1_weighted')
     clf.fit(x_train, y_train)
     print("Best parameters set found on development set: ", clf.best_params_)
     print("Grid scores on development set:\n")
@@ -164,6 +168,7 @@ def knnOptimizer(x_train,y_train,x_test,y_test):
     y_true, y_pred = y_test, clf.predict(x_test)
     print(classification_report(y_true, y_pred))
     return clf.best_params_
+
 
 # KARUN - optimizes Support Vector Classification model using the data
 def svcOptimizer(x_train,y_train,x_test,y_test):
