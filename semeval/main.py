@@ -68,12 +68,14 @@ if __name__ =='__main__':
     # parse_conll_to_json('train_conll_spanglish.txt','tweets_train.json')
     args = parse_arguments()
     print('args: ', args)
+
     if args.embeddings: 
         bert_args = get_run_args()
         print(bert_args)
         server = BertServer(bert_args)
         server.start()
         run_spinner('Loading Bert as a service\t',20)
+
     if args.clean:
         with open('data/tweets_train.json') as json_file:
             data = json.load(json_file)
@@ -84,85 +86,70 @@ if __name__ =='__main__':
         data = cleaning.lemmatize(data)
         with open('data/output_tweets.json', 'w') as fp:
             json.dump(data, fp)
+
     else:
         with open('data/output_tweets.json', 'r') as fp:
             data = json.load(fp)
 
-    # data = data[:3]
-    # capTweets, nonCappedTweets = metrics.splitTweetsByCaps(data)
-    # data = capTweets
-    # numOfPosSenti, numOfNeutSenti, numOfNegSenti = metrics.getSentimentCounts(data)
-
-    # # NOTE in theory, breaks the embedding stuff. Until they are combined, leave it commented out. except for the NOTE line (potentially)
-    # # # preprocessing
-    # emojiTweets, nonEmojiTweets = metrics.splitTweetsByEmoji(data) # NOTE use nonEmojiTweets for other methods, combinig the emoji appraoch? TODO
-    # data = emojiTweets
-    # numOfPosSenti, numOfNeutSenti, numOfNegSenti = metrics.getSentimentCounts(data)
-    # print("number of positive sentiments: ", numOfPosSenti)
-    # print("number of neutral sentiments: ", numOfNeutSenti)
-    # print("number of negative sentiments: ", numOfNegSenti)
-    # mostFrequentSentiment = metrics.getMostFreqSentiment(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
-
-    # # # splitting data
-    # x = [x['tweet'] for x in data]
-    # y = [ 0 if data['sentiment'] == 'negative' else 1 if data['sentiment'] =='neutral' else 2 for data in data]
-    # x_train,x_test,y_train,y_test = processing.splitData(x,y)
-
-    # # # emoji map
-    # emoji_sentiments = metrics.calculate_emoji_sentiments(x_train, y_train)
-    # # print('emoji_sentiments: ', emoji_sentiments)
-    # emojiPredictions = metrics.get_emoji_baseline(x_test, mostFrequentSentiment, emoji_sentiments)
-    # metrics.scorer(y_test, emojiPredictions)
+    # data = data[:100] # uncomment for quicker testing
 
     if args.embeddings:
-        _, embeddings = processing.get_word_embeddings(data)
+
+        emojisInData = metrics.get_all_emojis_used(data)
+
+        whole_sentiment_embeddings, whole_sentiment_embeddings_with_emojis = processing.get_word_embeddings_with_without_emojis(data, emojisInData)
+        avg_sentiment_embeddings, avg_sentiment_embeddings_with_emojis = processing.average_word_embeddings_with_without_emojis(data, emojisInData)
+
+        print(whole_sentiment_embeddings.shape)
+        print(whole_sentiment_embeddings_with_emojis.shape)
+        print(avg_sentiment_embeddings.shape)
+        print(avg_sentiment_embeddings_with_emojis.shape)
+
         with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
-            # print(embeddings)
-            json.dump(embeddings,fp,default=default)
-        if csv:
-            write_csv_embeddings(embeddings)
+            json.dump(whole_sentiment_embeddings, fp, default=default)
+        with open('data/whole_tweet_embeddings_with_emojis.json', 'w', encoding="utf8") as fp:
+            json.dump(whole_sentiment_embeddings_with_emojis, fp, default=default)
+        with open('data/avg_tweet_embeddings.json', 'w', encoding="utf8") as fp:
+            json.dump(avg_sentiment_embeddings, fp, default=default)
+        with open('data/avg_tweet_embeddings_with_emojis.json', 'w', encoding="utf8") as fp:
+            json.dump(avg_sentiment_embeddings_with_emojis, fp, default=default)
+
+        # if csv: # NOTE the ml version currently does not support cvs
+        #     write_csv_embeddings(embeddings)
     
         shut_args = get_shutdown_parser().parse_args(['-ip','localhost','-port','5555','-timeout','5000'])
         BertServer.shutdown(shut_args)
     else:
         with open('data/whole_tweet_embeddings.json') as fp:
             embeddings = json.load(fp)
-    x = [embedding['embedding'] for embedding in embeddings]
-    y = [ 0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2 for embedding in embeddings]
 
-    # x_train,x_test,y_train,y_test = processing.splitData(np.array(x),np.array(y))
-    # processing.torch_split(data)
-
-    processing.convert_to_numpy(y)
-    x_train,x_test,y_train,y_test = processing.splitData(x,y)
     if args.ml:
-        # linear models
-        # logisticRegression
-        logisticRegressionPredictions = machine_learning.logisticRegression(x_train,x_test,y_train,y_test)
-        metrics.scorer(y_test, logisticRegressionPredictions)
 
-        # non-linear models
-        # knn
-        knn_predictions = machine_learning.knn(x_train,x_test,y_train,y_test)
-        metrics.scorer(y_test, knn_predictions)
+        embeddingFileNames = ['data/whole_tweet_embeddings.json', 
+            'data/whole_tweet_embeddings_with_emojis.json', 
+            'data/avg_tweet_embeddings.json', 
+            'data/avg_tweet_embeddings_with_emojis.json']
 
-        # decisionTreeClassifier
-        decisionTreeClassifier_predictions = machine_learning.decisionTreeClassifier(x_train,x_test,y_train,y_test)
-        metrics.scorer(y_test, decisionTreeClassifier_predictions)
+        for fileName in embeddingFileNames:
+            fileNameUpdate = 'Using ' + fileName + ' as the embeddings'
+            print(fileNameUpdate)
 
-        # gaussianNB
-        gaussianNB_predictions = machine_learning.gaussianNB(x_train,x_test,y_train,y_test)
-        metrics.scorer(y_test, gaussianNB_predictions)
+            with open(fileName, 'r') as fp:
+                embeddings = json.load(fp)
 
-        # supportVectorClassification
-        svm_predictions = machine_learning.supportVectorClassification(x_train,x_test,y_train,y_test)
-        metrics.scorer(y_test, svm_predictions)
-        
-        # linearDiscriminantAnalysis
-        linearDiscriminantAnalysis_predictions = machine_learning.linearDiscriminantAnalysis(x_train,x_test,y_train,y_test)
-        metrics.scorer(y_test, linearDiscriminantAnalysis_predictions)
+                x = [embedding['embedding'] for embedding in embeddings]
+                y = [ 0 if embedding['sentiment'] == 'negative' else 1 if embedding['sentiment'] =='neutral' else 2 for embedding in embeddings]
+                processing.convert_to_numpy(y)
+                x_train,x_test,y_train,y_test = processing.splitData(x,y)
 
-        # copmutes the optimitzed hyper params
-        # Set the parameters by cross-validation
-        # params = machine_learning.paramOptimizer(x_train,y_train,x_test,y_test)
-        #paramOptimizer
+                print('optimizing decision tree')
+                # computes the optimized hyper params
+                # Set the parameters by cross-validation
+                params = machine_learning.dtcOptimizer(x_train,y_train,x_test,y_test)
+                print('best params for decision list: ', params)
+
+                print('optimizing SVC')
+                # computes the optimized hyper params
+                # Set the parameters by cross-validation
+                params = machine_learning.svcOptimizer(x_train,y_train,x_test,y_test)
+                print('best params for SVC: ', params)

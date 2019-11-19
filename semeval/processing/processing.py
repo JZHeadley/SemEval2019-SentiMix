@@ -17,14 +17,12 @@ def splitData(x,y):
     # print("number of X test: ", len(x_test))
     # print("number of y train: ", len(y_train))
     # print("number of y test: ", len(y_test))
-
     return x_train, x_test, y_train, y_test
 
 
 # ZEPHYR
 # need to run this before you run the code
 # the dependencies can be found here https://github.com/hanxiao/bert-as-service
-# 
 # bert-serving-start -model_dir tmp/ -num_worker=2 
 # Zephyr method to get embeddings of the tweets
 def get_word_embeddings(data):
@@ -54,7 +52,6 @@ def get_word_embeddings(data):
     return embeddings,sentiment_embeddings
 
 
-# TODO try a different combo method other than averaging
 # ALWIN - an other version of bert, per word and not per tweet
 def average_word_embeddings(data): 
     bc = BertClient()
@@ -88,12 +85,14 @@ def average_word_embeddings(data):
     return tweet_embeddings
 
 
-def get_word_embeddings_append_emojis(data, emojisInData):
+# Alwin - returns word embeddings created from a whole tweet. Returns a version with emojis appended and version without that
+def get_word_embeddings_with_without_emojis(data, emojisInData):
     bc = BertClient()
     # bc.encode(['First do it', 'then do it right', 'then do it better'])
 
-    embeddings = []
     sentiment_embeddings = []
+    sentiment_embeddings_with_emojis = []
+
     bar = ChargingBar('Calculating tweet embeddings with emojis\t\t\t', max=len(data))
     for instance in data:
         # should encode the join of the tokens array instead
@@ -104,16 +103,18 @@ def get_word_embeddings_append_emojis(data, emojisInData):
             embedding = bc.encode([' '.join(instance['tokens'])])
         
         embedding = embedding.reshape(768) # The hidden bert layer has 768 neurons (hence 768 features)
+
+        sentiment_embeddings.append({
+            "embedding": embedding,
+            "sentiment": instance['sentiment']
+        })
+
         # gets the freq of each emoji in a given tweet, returned in a list. This list has the same number of emojis and order of them for each tweet
         emojiFreqList = metrics.get_emojis_of_tweet(instance['tweet'], emojisInData)
-        # print("here embedding: ", type(embedding), embedding.shape, embedding)
-        # print("here emojiFreqList: ", type(emojiFreqList), emojiFreqList.shape, emojiFreqList)
         combinedEmbedding = np.concatenate((embedding, emojiFreqList))
         combinedEmbedding = combinedEmbedding.reshape(1, -1)
-        # print("combined embedding: ", type(combinedEmbedding), combinedEmbedding.shape, combinedEmbedding)
 
-        embeddings.append(combinedEmbedding)
-        sentiment_embeddings.append({
+        sentiment_embeddings_with_emojis.append({
             "embedding": combinedEmbedding[0],
             "sentiment": instance['sentiment']
         })
@@ -122,14 +123,16 @@ def get_word_embeddings_append_emojis(data, emojisInData):
     bar.finish()
     # print(embeddings)
     # print(len(embeddings), len(embeddings[0]),len(embeddings[0][0]))
-    return embeddings,sentiment_embeddings
+    return sentiment_embeddings, sentiment_embeddings_with_emojis
 
 
-# TODO try a different combo method other than averaging
-# ALWIN - an other version of bert, per word and not per tweet
-def average_word_embeddings_append_emojis(data, emojisInData): 
+# Alwin - returns word embeddings created via an combining embeddings from each word in a tweet via averaging. Returns a version with emojis appended and version without that
+def average_word_embeddings_with_without_emojis(data, emojisInData): 
     bc = BertClient()
-    tweet_embeddings = []
+
+    sentiment_embeddings = []
+    sentiment_embeddings_with_emojis = []
+
     bar = ChargingBar('Calculating word average embeddings with emojis\t\t\t', max=len(data))
     for instance in data:
         if len(instance['tokens']) == 0:
@@ -151,21 +154,25 @@ def average_word_embeddings_append_emojis(data, emojisInData):
             embedding = np.array(embedding)
             embedding = embedding.reshape(768) # The hidden bert layer has 768 neurons (hence 768 features)
             
-            # gets the freq of each emoji in a given tweet, returned in a list. This list has the same number of emojis and order of them for each tweet
-            emojiFreqList = metrics.get_emojis_of_tweet(instance['tweet'], emojisInData)
-            combinedEmbedding = np.concatenate((embedding, emojiFreqList))
-            combinedEmbedding = combinedEmbedding.reshape(1, -1)
-            # print("combined embedding: ", type(combinedEmbedding), combinedEmbedding.shape, combinedEmbedding)
+        sentiment_embeddings.append({
+            "embedding": embedding,
+            "sentiment": instance['sentiment']
+        })
 
-            tweet_embeddings.append({
-                "embedding": combinedEmbedding[0],
-                "sentiment": instance['sentiment']
-            })
-                
+        # gets the freq of each emoji in a given tweet, returned in a list. This list has the same number of emojis and order of them for each tweet
+        emojiFreqList = metrics.get_emojis_of_tweet(instance['tweet'], emojisInData)
+        combinedEmbedding = np.concatenate((embedding, emojiFreqList))
+        combinedEmbedding = combinedEmbedding.reshape(1, -1)
+
+        sentiment_embeddings_with_emojis.append({
+            "embedding": combinedEmbedding[0],
+            "sentiment": instance['sentiment']
+        })
         bar.next()
+
     bar.finish()
-    print("word average embedding: " + str(tweet_embeddings[0]))
-    return tweet_embeddings
+    # print("word average embedding: " + str(sentiment_embeddings_with_emojis[0]))
+    return sentiment_embeddings, sentiment_embeddings_with_emojis
 
 
 # ALWIN - converts a list to numpy
