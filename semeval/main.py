@@ -56,6 +56,7 @@ def get_run_args(parser_fn=get_args_parser, printed=True):
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("--clean", help="Clean the data", action="store_true")
+    parser.add_argument("--emojiMap", help="Uses basic emojis as a prediction model", action="store_true")
     parser.add_argument("--embeddings", help="Get the embeddings for the data", action="store_true")
     parser.add_argument("--csv", help="write embeddings to a csv file", action="store_true")
     parser.add_argument("--ml", help="Runs the machine learning models on the data", action="store_true")
@@ -91,7 +92,16 @@ if __name__ =='__main__':
         with open('data/output_tweets.json', 'r') as fp:
             data = json.load(fp)
 
-    # data = data[:100] # uncomment for quicker testing
+    data = data[:500] # uncomment for quicker testing
+
+    if args.emojiMap:
+
+        y_true = [ 0 if instance['sentiment'] == 'negative' else 1 if instance['sentiment'] =='neutral' else 2 for instance in data]
+        numOfPosSenti, numOfNegSenti, numOfNeutSenti = metrics.getSentimentCounts(data)
+        mostFrequentSentiment = metrics.getMostFreqSentiment(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
+        emoji_sentiments = metrics.calculate_emoji_sentiments(data)
+        y_pred = metrics.get_emoji_baseline(data, mostFrequentSentiment, emoji_sentiments)
+        metrics.scorer(y_true, y_pred)
 
     if args.embeddings:
 
@@ -105,13 +115,13 @@ if __name__ =='__main__':
         print(avg_sentiment_embeddings.shape)
         print(avg_sentiment_embeddings_with_emojis.shape)
 
-        with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
+        with open('data/whole_tweet_embeddings_fake.json', 'w', encoding="utf8") as fp:
             json.dump(whole_sentiment_embeddings, fp, default=default)
-        with open('data/whole_tweet_embeddings_with_emojis.json', 'w', encoding="utf8") as fp:
+        with open('data/whole_tweet_embeddings_with_emojis_fake.json', 'w', encoding="utf8") as fp:
             json.dump(whole_sentiment_embeddings_with_emojis, fp, default=default)
-        with open('data/avg_tweet_embeddings.json', 'w', encoding="utf8") as fp:
+        with open('data/avg_tweet_embeddings_fake.json', 'w', encoding="utf8") as fp:
             json.dump(avg_sentiment_embeddings, fp, default=default)
-        with open('data/avg_tweet_embeddings_with_emojis.json', 'w', encoding="utf8") as fp:
+        with open('data/avg_tweet_embeddings_with_emojis_fake.json', 'w', encoding="utf8") as fp:
             json.dump(avg_sentiment_embeddings_with_emojis, fp, default=default)
 
         # if csv: # NOTE the ml version currently does not support cvs
@@ -125,10 +135,10 @@ if __name__ =='__main__':
 
     if args.ml:
 
-        embeddingFileNames = ['data/whole_tweet_embeddings.json', 
-            'data/whole_tweet_embeddings_with_emojis.json', 
-            'data/avg_tweet_embeddings.json', 
-            'data/avg_tweet_embeddings_with_emojis.json']
+        embeddingFileNames = ['data/whole_tweet_embeddings_fake.json', 
+            'data/whole_tweet_embeddings_with_emojis_fake.json', 
+            'data/avg_tweet_embeddings_fake.json', 
+            'data/avg_tweet_embeddings_with_emojis_fake.json']
 
         for fileName in embeddingFileNames:
             fileNameUpdate = 'Using ' + fileName + ' as the embeddings'

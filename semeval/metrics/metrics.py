@@ -19,13 +19,13 @@ def extract_emojis(text):
 
 # Alwin, Zephyr Calculates the emoji map and which emojis should be positive, negative, or neutral
 # TODO read add some importance threshold?
-def calculate_emoji_sentiments(x, y):
+def calculate_emoji_sentiments(data):
    regex = re.compile(r'\d+(.*?)[\u263a-\U0001f645]')
    emoji_sentiments = {}
-   bar = ChargingBar('Calculating Emoji Map\t\t\t', max=len(x))
+   bar = ChargingBar('Calculating Emoji Map\t\t\t', max=len(data))
 
-   for i in range(len(x)):
-      emojis = extract_emojis(x[i])
+   for instance in data:
+      emojis = extract_emojis(instance['tweet'])
 
       for emoji in emojis:
          if emoji not in emoji_sentiments:
@@ -34,11 +34,11 @@ def calculate_emoji_sentiments(x, y):
             emoji_sentiments[emoji]['neutral'] = 0
             emoji_sentiments[emoji]['negative'] = 0
          
-         if (y[i] == 2): # 'positive'
+         if (instance['sentiment'] == 'positive'):
             emoji_sentiments[emoji]['positive'] += 1
-         elif (y[i] == 1): # 'neutral'
+         elif (instance['sentiment'] == 'neutral'):
             emoji_sentiments[emoji]['neutral'] += 1
-         elif (y[i] == 0): # 'negative'
+         elif (instance['sentiment'] == 'negative'):
             emoji_sentiments[emoji]['negative'] += 1
          
       bar.next()
@@ -83,8 +83,8 @@ def get_emojis_of_tweet(tweet, allEmojisInData):
 def get_emoji_baseline(data, mostFrequentSentiment, emoji_sentiments):
    predictions =[]
    bar = ChargingBar('Calculating Emoji Map Accuracy\t\t', max=len(data))
-   for tweet in data:
-      emojis = extract_emojis(tweet)
+   for instance in data:
+      emojis = extract_emojis(instance['tweet'])
 
       if (len(emojis) > 0):
          emojiSentiment = getEmojiSentiment(emojis, emoji_sentiments)
@@ -132,14 +132,14 @@ def getBaselinePredicitions(mostFrequentSentiment, y_true):
 
 
 # ALWIN - create y_pred to be init with the most frequent sentiment seen in the data
-def getMostFreqSentiment(numOfPosSenti, numOfNegSenti, numOfNeutSenti):
+def getMostFreqSentiment(numOfPosSenti, numOfNeutSenti, numOfNegSenti):
    sentiToPredict = -1
-   mostFrequentSenti = max(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
+   mostFrequentSenti = max(numOfPosSenti, numOfNeutSenti, numOfNegSenti)
    if (mostFrequentSenti == numOfPosSenti):
       sentiToPredict = 2
-   elif (mostFrequentSenti == numOfPosSenti):
+   elif (mostFrequentSenti == numOfNeutSenti):
       sentiToPredict = 1
-   elif (mostFrequentSenti == numOfPosSenti):
+   elif (mostFrequentSenti == numOfNegSenti):
       sentiToPredict = 0
    return sentiToPredict
 
