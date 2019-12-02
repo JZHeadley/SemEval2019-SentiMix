@@ -2,6 +2,7 @@ import re
 import regex
 import emoji
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 import numpy as np
@@ -146,9 +147,12 @@ def getMostFreqSentiment(numOfPosSenti, numOfNeutSenti, numOfNegSenti):
 
 # ALWIN - computes the score of a given prediciton list, given the correct answers
 def scorer(y_true, y_pred):
-   print("accuracy: ",accuracy_score(y_true, y_pred))
+   print("accuracy: ", accuracy_score(y_true, y_pred))
    print(confusion_matrix(y_true, y_pred))
    print(classification_report(y_true, y_pred))
+
+   f1 = f1_score(y_true, y_pred, average='micro')
+   return f1
 
 
 # ALWIN - returns a list of all tweets that have emojis, and another list of the tweets that dont

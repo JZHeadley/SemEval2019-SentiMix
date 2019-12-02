@@ -67,6 +67,7 @@ def parse_arguments():
 
 if __name__ =='__main__':
     # parse_conll_to_json('train_conll_spanglish.txt','tweets_train.json')
+    summarizedResults = {}
     args = parse_arguments()
     print('args: ', args)
 
@@ -92,7 +93,7 @@ if __name__ =='__main__':
         with open('data/output_tweets.json', 'r') as fp:
             data = json.load(fp)
 
-    data = data[:500] # uncomment for quicker testing
+    # data = data[:500] # uncomment for quicker testing
 
     if args.emojiMap:
 
@@ -101,7 +102,9 @@ if __name__ =='__main__':
         mostFrequentSentiment = metrics.getMostFreqSentiment(numOfPosSenti, numOfNegSenti, numOfNeutSenti)
         emoji_sentiments = metrics.calculate_emoji_sentiments(data)
         y_pred = metrics.get_emoji_baseline(data, mostFrequentSentiment, emoji_sentiments)
-        metrics.scorer(y_true, y_pred)
+        f1_score = metrics.scorer(y_true, y_pred)
+        summarizedResults['emojiMap'] = {}
+        summarizedResults['emojiMap']['score'] = f1_score
 
     if args.embeddings:
 
@@ -110,18 +113,13 @@ if __name__ =='__main__':
         whole_sentiment_embeddings, whole_sentiment_embeddings_with_emojis = processing.get_word_embeddings_with_without_emojis(data, emojisInData)
         avg_sentiment_embeddings, avg_sentiment_embeddings_with_emojis = processing.average_word_embeddings_with_without_emojis(data, emojisInData)
 
-        print(whole_sentiment_embeddings.shape)
-        print(whole_sentiment_embeddings_with_emojis.shape)
-        print(avg_sentiment_embeddings.shape)
-        print(avg_sentiment_embeddings_with_emojis.shape)
-
-        with open('data/whole_tweet_embeddings_fake.json', 'w', encoding="utf8") as fp:
+        with open('data/whole_tweet_embeddings.json', 'w', encoding="utf8") as fp:
             json.dump(whole_sentiment_embeddings, fp, default=default)
-        with open('data/whole_tweet_embeddings_with_emojis_fake.json', 'w', encoding="utf8") as fp:
+        with open('data/whole_tweet_embeddings_with_emojis.json', 'w', encoding="utf8") as fp:
             json.dump(whole_sentiment_embeddings_with_emojis, fp, default=default)
-        with open('data/avg_tweet_embeddings_fake.json', 'w', encoding="utf8") as fp:
+        with open('data/avg_tweet_embeddings.json', 'w', encoding="utf8") as fp:
             json.dump(avg_sentiment_embeddings, fp, default=default)
-        with open('data/avg_tweet_embeddings_with_emojis_fake.json', 'w', encoding="utf8") as fp:
+        with open('data/avg_tweet_embeddings_with_emojis.json', 'w', encoding="utf8") as fp:
             json.dump(avg_sentiment_embeddings_with_emojis, fp, default=default)
 
         # if csv: # NOTE the ml version currently does not support cvs
@@ -135,10 +133,10 @@ if __name__ =='__main__':
 
     if args.ml:
 
-        embeddingFileNames = ['data/whole_tweet_embeddings_fake.json', 
-            'data/whole_tweet_embeddings_with_emojis_fake.json', 
-            'data/avg_tweet_embeddings_fake.json', 
-            'data/avg_tweet_embeddings_with_emojis_fake.json']
+        embeddingFileNames = ['data/whole_tweet_embeddings.json', 
+            'data/whole_tweet_embeddings_with_emojis.json', 
+            'data/avg_tweet_embeddings.json', 
+            'data/avg_tweet_embeddings_with_emojis.json']
 
         for fileName in embeddingFileNames:
             fileNameUpdate = 'Using ' + fileName + ' as the embeddings'
@@ -155,11 +153,19 @@ if __name__ =='__main__':
                 print('optimizing decision tree')
                 # computes the optimized hyper params
                 # Set the parameters by cross-validation
-                params = machine_learning.dtcOptimizer(x_train,y_train,x_test,y_test)
-                print('best params for decision list: ', params)
+                score, params = machine_learning.dtcOptimizer(x_train,y_train,x_test,y_test)
+                resultsHeader = 'dtc - ' + fileName
+                summarizedResults[resultsHeader] = {}
+                summarizedResults[resultsHeader]['score'] = score
+                summarizedResults[resultsHeader]['params'] = params
 
                 print('optimizing SVC')
                 # computes the optimized hyper params
                 # Set the parameters by cross-validation
-                params = machine_learning.svcOptimizer(x_train,y_train,x_test,y_test)
-                print('best params for SVC: ', params)
+                score, params = machine_learning.svcOptimizer(x_train,y_train,x_test,y_test)
+                resultsHeader = 'svc - ' + fileName
+                summarizedResults[resultsHeader] = {}
+                summarizedResults[resultsHeader]['score'] = score
+                summarizedResults[resultsHeader]['params'] = params
+
+    print('summarizedResults: ', summarizedResults)

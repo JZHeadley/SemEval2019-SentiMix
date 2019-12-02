@@ -121,6 +121,7 @@ def dtcOptimizer(x_train,y_train,x_test,y_test):
     tuned_parameters={'min_samples_split' : range(10,500,20),'max_depth': range(1,20,2)}
     clf = GridSearchCV(DecisionTreeClassifier(), tuned_parameters, cv=5, scoring='f1_weighted')
     clf.fit(x_train, y_train)
+    print("Best score set found on development set: ", clf.best_score_)
     print("Best parameters set found on development set: ", clf.best_params_)
     print("Grid scores on development set:\n")
     means = clf.cv_results_["mean_test_score"]
@@ -130,7 +131,7 @@ def dtcOptimizer(x_train,y_train,x_test,y_test):
     print('\nDetailed classification report:\n')
     y_true, y_pred = y_test, clf.predict(x_test)
     print(classification_report(y_true, y_pred))
-    return clf.best_params_
+    return clf.best_score_, clf.best_params_
 
 
 # KARUN - optimizes logistic regression model using the data
@@ -141,6 +142,7 @@ def logregOptimizer(x_train,y_train,x_test,y_test):
     # Create grid search using 5-fold cross validation
     clf = GridSearchCV(LogisticRegression(), tuned_parameters, cv=5, scoring='f1_weighted')
     clf.fit(x_train, y_train)
+    print("Best score set found on development set: ", clf.best_score_)
     print("Best parameters set found on development set: ", clf.best_params_)
     print("Grid scores on development set:\n")
     means = clf.cv_results_["mean_test_score"]
@@ -150,7 +152,7 @@ def logregOptimizer(x_train,y_train,x_test,y_test):
     print('\nDetailed classification report:\n')
     y_true, y_pred = y_test, clf.predict(x_test)
     print(classification_report(y_true, y_pred))
-    return clf.best_params_
+    return clf.best_score_, clf.best_params_
 
 
 #KARUN - optimizes knn model using the data
@@ -158,6 +160,7 @@ def knnOptimizer(x_train,y_train,x_test,y_test):
     tuned_parameters = {'n_neighbors': list(range(10, 21))}
     clf = GridSearchCV(KNeighborsClassifier(), tuned_parameters, cv=5, scoring='f1_weighted')
     clf.fit(x_train, y_train)
+    print("Best score set found on development set: ", clf.best_score_)
     print("Best parameters set found on development set: ", clf.best_params_)
     print("Grid scores on development set:\n")
     means = clf.cv_results_["mean_test_score"]
@@ -167,7 +170,7 @@ def knnOptimizer(x_train,y_train,x_test,y_test):
     print('\nDetailed classification report:\n')
     y_true, y_pred = y_test, clf.predict(x_test)
     print(classification_report(y_true, y_pred))
-    return clf.best_params_
+    return clf.best_score_, clf.best_params_
 
 
 # KARUN - optimizes Support Vector Classification model using the data
@@ -179,6 +182,7 @@ def svcOptimizer(x_train,y_train,x_test,y_test):
     scores = ['f1_weighted']
     clf = GridSearchCV(SVC(), tuned_parameters, cv=2,scoring='f1_weighted')
     clf.fit(x_train, y_train)
+    print("Best score set found on development set: ", clf.best_score_)
     print("Best parameters set found on development set: ", clf.best_params_)
     print("Grid scores on development set:\n")
     means = clf.cv_results_["mean_test_score"]
@@ -188,4 +192,4 @@ def svcOptimizer(x_train,y_train,x_test,y_test):
     print('\nDetailed classification report:\n')
     y_true, y_pred = y_test, clf.predict(x_test)
     print(classification_report(y_true, y_pred))
-    return clf.best_params_
+    return clf.best_score_, clf.best_params_
