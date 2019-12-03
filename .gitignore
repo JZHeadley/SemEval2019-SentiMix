@@ -8,3 +8,6 @@ whole_tweet_embeddings.json
 *.zip
 *.csv
 *.tsv
+data/avg_tweet_embeddings.json
+data/avg_tweet_embeddings_with_emojis.json
+data/whole_tweet_embeddings_with_emojis.json

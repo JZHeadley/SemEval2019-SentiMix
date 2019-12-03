@@ -58,7 +58,7 @@ def parse_arguments():
     parser.add_argument("--clean", help="Clean the data", action="store_true")
     parser.add_argument("--emojiMap", help="Uses basic emojis as a prediction model", action="store_true")
     parser.add_argument("--embeddings", help="Get the embeddings for the data", action="store_true")
-    parser.add_argument("--csv", help="write embeddings to a csv file", action="store_true")
+    # parser.add_argument("--csv", help="write embeddings to a csv file", action="store_true")
     parser.add_argument("--ml", help="Runs the machine learning models on the data", action="store_true")
 
     args, _ = parser.parse_known_args()
